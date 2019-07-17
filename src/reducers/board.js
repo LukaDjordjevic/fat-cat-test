@@ -1,7 +1,7 @@
-import constants, { boardSize } from '../constants'
+import constants, { numberOfBoardSquares } from '../constants'
 
 const initialState = {
-  state: new Array(boardSize).fill(new Array(boardSize).fill('blank')),
+  state: new Array(numberOfBoardSquares).fill(new Array(numberOfBoardSquares).fill('blank')),
   levels: [],
 }
 

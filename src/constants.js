@@ -9,5 +9,5 @@ export default keykey([
 
 ])
 
-export const boardSize = 10
+export const numberOfBoardSquares = 10
 

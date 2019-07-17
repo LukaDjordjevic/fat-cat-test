@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import Board from './containers/Board'
+import Layout from './containers/Layout'
 // import { AppContainer } from 'react-hot-loader' /* react-hot-loader v3 */
 import configureStore from './store'
 import './styles/app.css'
@@ -12,8 +12,7 @@ const RootComponent = (
     // <AppContainer>
     <Provider store={store}>
       <div className="layout">
-        <Board />
-        <p>Doooooli</p>
+        <Layout />
       </div>
     </Provider>
     // </AppContainer>

@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import constants, { boardSize } from '../constants'
+import constants, { numberOfBoardSquares } from '../constants'
 
 class Board extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      selectingInitialSquare: false,
-      squareSize: window.innerHeight / constants.boardSize,
+      selectingInitialSquare: true,
+      // squareSize: window.innerHeight / constants.boardSize,
     }
     this.config = {
       numberOfLevels: 99,
@@ -19,7 +19,13 @@ class Board extends Component {
   componentDidMount() {
     this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: 0, y: 0, state: 'finished' }})
     this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: 2, y: 2, state: 'legalMove' }})
-    this.setState({ squareSize: window.innerHeight / boardSize })
+    // this.setState({ squareSize: window.innerHeight / boardSize })
+    // this.parectDivRet = this.board ? this.board.getBoundingClientRect() : null
+    // console.log('rect', this.parectDivRet);
+    // this.forceUpdate()
+    // localStorage.setItem('myCat', 'Tom')
+    console.log(localStorage.getItem('myCat'))
+    
   }
 
   getSquareProps(x, y) {
@@ -48,11 +54,12 @@ class Board extends Component {
 
   renderBoard() {
     
-    const { boardState } = this.props
+    const { boardState, boardSize } = this.props
     const boardSquares = []
+    const squareSize = boardSize ? boardSize / numberOfBoardSquares : 0
     let onClick = null
-    for (let x = 0; x < boardSize; x++) {
-      for (let y = 0; y < boardSize; y++) {
+    for (let x = 0; x < numberOfBoardSquares; x++) {
+      for (let y = 0; y < numberOfBoardSquares; y++) {
         const { color, type } = this.getSquareProps(x, y)
         if (this.state.selectingInitialSquare) {
           onClick = () => this.handleInitialSquareSelect(x, y)
@@ -65,10 +72,10 @@ class Board extends Component {
             className="board-square"
             onClick={onClick}
             style={{
-              left: `${this.state.squareSize * x}px`,
-              top: `${this.state.squareSize * y}px`,
-              width: `${this.state.squareSize}px`,
-              height: `${this.state.squareSize}px`,
+              left: `${squareSize * x}px`,
+              top: `${squareSize * y}px`,
+              width: `${squareSize}px`,
+              height: `${squareSize}px`,
               backgroundColor: color,
               cursor: boardState[x][y] === 'legalMove' ? 'pointer' : 'default' }}
           />
@@ -79,9 +86,10 @@ class Board extends Component {
   }
 
   render() {
+    // if(!this.parectDivRet) return null
     return (
-      <div className="board">
-        <p>Board123</p>
+      <div>
+        {/* <p>Board123</p> */}
         {this.renderBoard()}
       </div>
     )
@@ -89,10 +97,12 @@ class Board extends Component {
 }
 
 Board.defaultProps = {
+  boardSize: 0,
 }
 
 Board.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  boardSize: PropTypes.number,
 }
 
 const mapStateToProps = ({ app, board }) => ({
