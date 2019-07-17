@@ -9,7 +9,6 @@ class Board extends Component {
 
     this.state = {
       selectingInitialSquare: true,
-      // squareSize: window.innerHeight / constants.boardSize,
     }
     this.config = {
       numberOfLevels: 99,
@@ -19,10 +18,6 @@ class Board extends Component {
   componentDidMount() {
     this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: 0, y: 0, state: 'finished' }})
     this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: 2, y: 2, state: 'legalMove' }})
-    // this.setState({ squareSize: window.innerHeight / boardSize })
-    // this.parectDivRet = this.board ? this.board.getBoundingClientRect() : null
-    // console.log('rect', this.parectDivRet);
-    // this.forceUpdate()
     // localStorage.setItem('myCat', 'Tom')
     console.log(localStorage.getItem('myCat'))
     
@@ -86,10 +81,8 @@ class Board extends Component {
   }
 
   render() {
-    // if(!this.parectDivRet) return null
     return (
       <div>
-        {/* <p>Board123</p> */}
         {this.renderBoard()}
       </div>
     )
