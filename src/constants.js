@@ -5,8 +5,9 @@ export default keykey([
   'SET_USER',
 
   // Board
-  'SET_BOARD_STATE',
+  'SET_PIECE_STATE',
 
 ])
 
+export const boardSize = 10
 
