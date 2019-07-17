@@ -19,19 +19,12 @@ class Board extends Component {
   componentDidMount() {
     this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: 0, y: 0, state: 'finished' }})
     this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: 2, y: 2, state: 'legalMove' }})
-    console.log(boardSize, this.props.boardState)
-    console.log('size', window.innerHeight, constants.boardSize)
-    
     this.setState({ squareSize: window.innerHeight / boardSize })
   }
 
   getSquareProps(x, y) {
-    console.log('get square props')
     const { boardState } = this.props
     let color = 'white'
-    // let clickable = false
-    let clickActionHandler = null
-    console.log('123', boardSize, this.props.boardState, x, y)
 
     switch(boardState[x][y]) {
       case 'finished':
@@ -39,12 +32,10 @@ class Board extends Component {
         break
       case 'legalMove':
         color = 'orange'
-        clickActionHandler = this.handleLegalMoveClick
-        // clickable = true
         break
       default:
     }
-    return { color, clickActionHandler, type: boardState[x][y]}
+    return { color, type: boardState[x][y]}
   }
 
   handleLegalMoveClick(x, y) {
@@ -62,10 +53,7 @@ class Board extends Component {
     let onClick = null
     for (let x = 0; x < boardSize; x++) {
       for (let y = 0; y < boardSize; y++) {
-        console.log (x, y)
-        
-        const { color, clickActionHandler, type } = this.getSquareProps(x, y)
-        console.log('render board', this.getSquareProps(x, y));
+        const { color, type } = this.getSquareProps(x, y)
         if (this.state.selectingInitialSquare) {
           onClick = () => this.handleInitialSquareSelect(x, y)
         } else if (type === 'legalMove') {
@@ -73,6 +61,7 @@ class Board extends Component {
         }
         boardSquares.push(
           <div
+            key={`${x}${y}`}
             className="board-square"
             onClick={onClick}
             style={{
@@ -86,7 +75,6 @@ class Board extends Component {
         )
       }
     }
-    console.log ('board squares', boardSquares)
     return boardSquares
   }
 
