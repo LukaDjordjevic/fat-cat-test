@@ -6,6 +6,8 @@ body {
 .layout {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100vw;
   height: 100vh;
   background-color: rgb(172, 235, 235);
@@ -14,14 +16,16 @@ body {
 
 }
 
-.boardDiv {
+.board-div {
   display: flex;
+  width: 100%;
   min-height: 0;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   flex: 1 1 auto;
   /* background-color: rgb(197, 231, 231); */
-  background-color: yellow;
+  background-color: lightblue;
   margin: 10px;
 }
 
@@ -34,6 +38,8 @@ body {
 }
 
 .game-stats {
-  flex: 0 0 50px;
-  background-color: red;
+  height: 30px;
+  flex: 0 0 30px;
+  margin-bottom: 10px;
+  background-color: darkcyan;
 }

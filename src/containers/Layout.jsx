@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import constants, { numberOfBoardSquares } from '../constants'
 import Board from './Board'
+import GameStats from '../components/GameStats'
 
 class Layout extends Component {
   constructor(props) {
@@ -42,13 +43,15 @@ class Layout extends Component {
   render() {
     return (
       <div className="layout">
-        <div className="boardDiv" ref={el => this.boardDiv = el}>
+        <div className="board-div" ref={el => this.boardDiv = el}>
           <div className="board" style={{ width: `${this.state.boardSize}px`, height: `${this.state.boardSize}px` }}>
             <Board boardSize={this.state.boardSize}/>
           </div>
         </div>
+        <div className="game-stats" style={{ width: `${this.state.boardSize}px` }}>
+          <GameStats />
+        </div>
         
-        <div className="game-stats" />
       </div>
     )
   }

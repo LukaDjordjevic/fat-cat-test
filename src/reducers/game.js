@@ -1,0 +1,49 @@
+import constants from '../constants'
+
+const initialState = {
+  levels: [],
+  currentLevel: 1,
+  currentMove: 1,
+  lives: 1,
+  leftToClick: null,
+  moveTime: 0,
+}
+
+export default (state = initialState, action) => {
+  switch (action.type) {
+    // case constants.SET_LIVES:
+    //   return {
+    //     ...state,
+    //     lives: action.payload,
+    //   }
+
+    // case constants.SET_CURRENT_MOVE:
+    //   return {
+    //     ...state,
+    //     currentMove: action.payload,
+    //   }
+  
+    // case constants.SET_CURRENT_LEVEL:
+    //   return {
+    //     ...state,
+    //     currentLevel: action.payload,
+    //   }
+  
+    // case constants.SET_LEFT_TO_CLICK:
+    //   return {
+    //     ...state,
+    //     leftToClick: action.payload,
+    //   }
+
+    // case constants.SET_LEVEL:
+    //   const newLevels = JSON.parse(JSON.strinfigy(state.levels))
+    //   newLevels[action.payload.levelNum] = action.payload.level
+    //   return {
+    //     ...state,
+    //     levels: newLevels,
+    //   }
+
+    default:
+      return state
+  }
+}

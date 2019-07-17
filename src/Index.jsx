@@ -6,6 +6,7 @@ import Layout from './containers/Layout'
 import configureStore from './store'
 import './styles/app.css'
 import './styles/board.css'
+import './styles/game-stats.css'
 
 export const store = configureStore()
 const RootComponent = (
