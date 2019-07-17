@@ -48,7 +48,6 @@ class Board extends Component {
   }
 
   renderBoard() {
-    
     const { boardState, boardSize } = this.props
     const boardSquares = []
     const squareSize = boardSize ? boardSize / numberOfBoardSquares : 0
@@ -82,9 +81,9 @@ class Board extends Component {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         {this.renderBoard()}
-      </div>
+      </React.Fragment>
     )
   }
 }

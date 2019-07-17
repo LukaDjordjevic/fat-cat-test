@@ -10,7 +10,7 @@ const GameStats = (props) => {
         {`Timer: ${props.timer} seconds`}
       </div>
       <div className='stats-item'>
-        {`Left to click: ${props.leftToClick}`}
+        {`Left to click: ${props.leftToClick ? props.leftToClick : '-'}`}
       </div>
       <div className='stats-item'>
         {`Lives: ${props.lives}`}

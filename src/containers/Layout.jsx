@@ -17,15 +17,6 @@ class Layout extends Component {
 
   }
 
-  setBoardDimensions() {
-    if (this.boardDiv) {
-      const boardDivRect = this.boardDiv.getBoundingClientRect()
-      this.setState({ 
-        boardSize: Math.min(boardDivRect.width, boardDivRect.height)
-      })
-    }
-  }
-
   componentDidMount() {
     this.setBoardDimensions()
     window.addEventListener('resize', this.onWindowResize);
@@ -34,10 +25,19 @@ class Layout extends Component {
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize);
   }
-
+  
   onWindowResize() {
     this.setBoardDimensions()
     console.log('resize', this.boardDiv.getBoundingClientRect())
+  }
+  
+  setBoardDimensions() {
+    if (this.boardDiv) {
+      const boardDivRect = this.boardDiv.getBoundingClientRect()
+      this.setState({ 
+        boardSize: Math.min(boardDivRect.width, boardDivRect.height)
+      })
+    }
   }
 
   render() {
