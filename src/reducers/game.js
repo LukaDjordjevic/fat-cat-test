@@ -5,7 +5,7 @@ const initialState = {
   currentLevel: 1,
   currentMove: 1,
   lives: 1,
-  leftToClick: null,
+  leftToClick: undefined,
   moveTime: 0,
 }
 

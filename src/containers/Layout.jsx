@@ -48,7 +48,7 @@ class Layout extends Component {
             <Board boardSize={this.state.boardSize}/>
           </div>
         </div>
-        <div className="game-stats" style={{ width: `${this.state.boardSize}px` }}>
+        <div className="game-stats" style={{ width: `${Math.max(this.state.boardSize, 350)}px` }}>
           <GameStats />
         </div>
         

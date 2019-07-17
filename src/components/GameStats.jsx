@@ -24,7 +24,7 @@ const GameStats = (props) => {
 }
 
 GameStats.defaultProps = {
-  leftToClick: '-',
+  leftToClick: 0,
 }
 
 GameStats.propTypes = {
