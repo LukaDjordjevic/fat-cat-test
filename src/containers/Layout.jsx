@@ -23,6 +23,7 @@ class Layout extends Component {
     this.showUserForm = this.showUserForm.bind(this)
     this.closeUserForm = this.closeUserForm.bind(this)
     this.startTimer = this.startTimer.bind(this)
+    this.stopTimer = this.stopTimer.bind(this)
     this.startNewLevel = this.startNewLevel.bind(this)
     this.handleGameLost = this.handleGameLost.bind(this)
   }
@@ -33,6 +34,18 @@ class Layout extends Component {
     // localStorage.removeItem('lastUser')
     // localStorage.removeItem('users')
     this.props.dispatch({ type: constants.SET_USER, payload: this.lastUser})
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.selectingInitialSquare && !nextProps.numberOfLegalMoves) {
+      this.stopTimer()
+    }
+    if(this.props.currentMove !== nextProps.currentMove) {
+      this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
+    }
+    if(this.props.selectingInitialSquare && !nextProps.selectingInitialSquare) {
+      this.startTimer()
+    }
   }
 
   componentWillUnmount() {
@@ -53,6 +66,7 @@ class Layout extends Component {
 
   startNewLevel() {
     if (this.timer) clearInterval(this.timer)
+    this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
     this.props.dispatch({ type: constants.SET_LIVES, payload: this.props.lives + 1 })
     this.props.dispatch({ type: constants.SET_CURRENT_LEVEL, payload: this.props.currentLevel + 1 })
     this.props.dispatch({ type: constants.SET_CURRENT_MOVE, payload: 1 })
@@ -61,7 +75,8 @@ class Layout extends Component {
   }
 
   handleGameLost() {
-    if (this.timer) clearInterval(this.timer)
+    // if (this.timer) clearInterval(this.timer)
+    this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
     const newLives = this.props.lives - this.props.leftToClick
     this.props.dispatch({ type: constants.SET_CURRENT_MOVE, payload: 1 })
     this.props.dispatch({ type: constants.SET_SELECTING_INITIAL_SQUARE, payload: true })
@@ -84,9 +99,18 @@ class Layout extends Component {
   }
 
   startTimer() {
+    this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
     this.timer = setInterval(() => {
       this.props.dispatch({ type: constants.SET_TIME, payload: this.props.moveTime + 1})
     }, 1000)
+
+
+  }
+
+  stopTimer() {
+    console.log('stopping timer')
+    if (this.timer) clearInterval(this.timer)
+    // this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
   }
 
   render() {
@@ -97,7 +121,7 @@ class Layout extends Component {
         </div>
         <div className="board-div" ref={el => this.boardDiv = el}>
           <div className="board" style={{ width: `${this.state.boardSize}px`, height: `${this.state.boardSize}px` }}>
-            <Board boardSize={this.state.boardSize} startTimer={this.startTimer}/>
+            <Board boardSize={this.state.boardSize} startTimer={this.startTimer} stopTimer={this.stopTimer} />
           </div>
         </div>
         <div className="game-stats" style={{ width: `${Math.max(this.state.boardSize, 350)}px` }}>
@@ -132,6 +156,7 @@ Layout.propTypes = {
   moveTime: PropTypes.number.isRequired,
   leftToClick: PropTypes.number,
   currentLevel: PropTypes.number,
+  currentMove: PropTypes.number,
   lives: PropTypes.number,
   numberOfLegalMoves: PropTypes.number.isRequired,
   selectingInitialSquare: PropTypes.bool.isRequired,
@@ -140,6 +165,7 @@ Layout.propTypes = {
 const mapStateToProps = ({ app, board, game }) => ({
   moveTime: game.moveTime,
   currentLevel: game.currentLevel,
+  currentMove: game.currentMove,
   leftToClick: game.leftToClick,
   lives: game.lives,
   numberOfLegalMoves: board.numberOfLegalMoves,

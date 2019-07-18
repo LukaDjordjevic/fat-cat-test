@@ -2,7 +2,7 @@ import constants from '../constants'
 
 const initialState = {
   levels: [],
-  currentLevel: 1,
+  currentLevel: 10,
   currentMove: 1,
   lives: 1,
   leftToClick: 0,

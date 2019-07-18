@@ -45,10 +45,17 @@ class Board extends Component {
     this.props.dispatch({ type: constants.LOAD_LEVEL, payload: level })
     this.props.dispatch({ type: constants.SET_LEFT_TO_CLICK, payload: this.props.currentLevel })
     this.props.dispatch({ type: constants.SET_SELECTING_INITIAL_SQUARE, payload: false })
-    this.props.startTimer()
+    // this.props.startTimer()
   }
 
   handleLegalMoveClick(x, y) {
+    // console.log('12345', this.props.numberOfLegalMoves, this.props.leftToClick)
+    // if (this.props.currentMove === this.props.currentLevel) { // Game successfully completed
+    //   this.props.stopTimer()
+    // }
+    // if (!this.props.numberOfLegalMoves && this.props.leftToClick) { // Game lost
+    //   this.props.stopTimer()
+    // }
     this.props.dispatch({ type: constants.UPDATE_BOARD, payload: { x, y } })
     this.props.dispatch({ type: constants.SET_CURRENT_MOVE, payload: this.props.currentMove + 1 })
     this.props.dispatch({ type: constants.SET_LEFT_TO_CLICK, payload: this.props.leftToClick - 1 })
@@ -106,11 +113,13 @@ Board.defaultProps = {
 Board.propTypes = {
   dispatch: PropTypes.func.isRequired,
   startTimer: PropTypes.func.isRequired,
+  stopTimer: PropTypes.func.isRequired,
   boardSize: PropTypes.number,
   currentLevel: PropTypes.number,
   leftToClick: PropTypes.number,
   currentMove: PropTypes.number,
   moveTime: PropTypes.number,
+  // numberOfLegalMoves: PropTypes.number,
   selectingInitialSquare: PropTypes.bool.isRequired,
 }
 
@@ -120,7 +129,8 @@ const mapStateToProps = ({ app, board, game }) => ({
   leftToClick: game.leftToClick,
   moveTime: game.moveTime,
   currentMove: game.currentMove,
-  selectingInitialSquare: game.selectingInitialSquare
+  selectingInitialSquare: game.selectingInitialSquare,
+  // numberOfLegalMoves: board.numberOfLegalMoves,
 })
 
 export default connect(mapStateToProps)(Board)
