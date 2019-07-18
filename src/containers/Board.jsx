@@ -17,7 +17,7 @@ class Board extends Component {
 
   componentDidMount() {
     this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: 0, y: 0, state: 'finished' }})
-    this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: 2, y: 2, state: 'legalMove' }})
+    this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: 3, y: 3, state: 'legalMove' }})
   }
 
   getSquareProps(x, y) {

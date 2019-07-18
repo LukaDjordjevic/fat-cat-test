@@ -10,6 +10,7 @@ export default keykey([
   // Game
   // 'SET_CURRENT_MOVE',
   // 'SET_CURRENT_LEVEL',
+  'SET_TIME',
 
 ])
 

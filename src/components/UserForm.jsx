@@ -22,7 +22,6 @@ class UserForm extends React.Component {
   }
 
   componentDidMount() {
-
   }
 
   onSelectUser(value) {
@@ -32,10 +31,12 @@ class UserForm extends React.Component {
   }
 
   onCreateUser() {
-    // if (!this.users) this.users = []
-    // this.
     const users = this.users ? JSON.parse(JSON.stringify(this.users)) : []
-    users.push({ name: this.state.user, level: parseInt(this.state.level) })
+    users.push({ 
+      name: this.state.user,
+      level: parseInt(this.state.level),
+      lastCompletedLevel: 0,
+    })
     localStorage.setItem('users', JSON.stringify(users))
     localStorage.setItem('lastUser', this.state.user)
     this.props.dispatch({ type: constants.SET_USER, payload: this.state.user})

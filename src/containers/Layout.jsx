@@ -28,6 +28,9 @@ class Layout extends Component {
     // localStorage.removeItem('lastUser')
     // localStorage.removeItem('users')
     this.props.dispatch({ type: constants.SET_USER, payload: this.lastUser})
+    // const timer = setInterval(() => {
+    //   this.props.dispatch({ type: constants.SET_TIME, payload: this.props.moveTime + 1})
+    // }, 1000)
   }
 
   componentWillUnmount() {
@@ -83,7 +86,8 @@ Layout.propTypes = {
   dispatch: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = ({ app, board }) => ({
+const mapStateToProps = ({ app, board, game }) => ({
+  // moveTime: game.moveTime,
 })
 
 export default connect(mapStateToProps)(Layout)

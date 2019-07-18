@@ -17,6 +17,12 @@ export default (state = initialState, action) => {
     //     lives: action.payload,
     //   }
 
+    case constants.SET_TIME:
+      return {
+        ...state,
+        moveTime: action.payload,
+      }
+
     // case constants.SET_CURRENT_MOVE:
     //   return {
     //     ...state,
