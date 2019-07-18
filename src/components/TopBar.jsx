@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-// import constants, { numberOfBoardSquares } from '../constants'
 
 const TopBar = (props) => {
   return (

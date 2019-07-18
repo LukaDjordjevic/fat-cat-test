@@ -5,7 +5,6 @@ export default keykey([
   'SET_USER',
 
   // Board
-  // 'SET_PIECE_STATE',
   'CLEAR_BOARD',
   'LOAD_LEVEL',
   'UPDATE_BOARD',
@@ -17,8 +16,7 @@ export default keykey([
   'SET_CURRENT_MOVE',
   'SET_CURRENT_LEVEL',
   'SET_LIVES',
-
 ])
 
 export const numberOfBoardSquares = 10
-export const minLevel = 5
+export const minLevel = 6

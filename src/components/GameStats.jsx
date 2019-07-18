@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-// import constants, { numberOfBoardSquares } from '../constants'
 
 const GameStats = (props) => {
   return (
@@ -19,7 +18,6 @@ const GameStats = (props) => {
         {`Level: ${props.level}`}
       </div>
     </React.Fragment>
-
   )
 }
 

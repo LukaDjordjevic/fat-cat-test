@@ -1,16 +1,12 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Input, Select, Button } from 'antd'
-import { range } from '../util'
-import constants, { numberOfBoardSquares } from '../constants'
+import { Button } from 'antd'
 
 const DalogueBox = (props) => {
   return (
     <div className="modal">
       <div className="basic-form" style={{ width: '280px', alignItems: 'center' }}>
         <div className="form-headline">{props.headline}</div>
-        {/* <div style={{ height: '10px' }} /> */}
         <div className="">{props.additionalText}</div>
         <div style={{ height: '10px' }} />
         <Button
@@ -37,7 +33,4 @@ DalogueBox.propTypes = {
   buttonText: PropTypes.string.isRequired,
 }
 
-const mapStateToProps = ({ app, board, game }) => ({
-})
-
-export default connect(mapStateToProps)(DalogueBox)
+export default DalogueBox

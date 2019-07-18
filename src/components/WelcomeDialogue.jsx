@@ -1,9 +1,8 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Input, Select, Button } from 'antd'
+import { Select } from 'antd'
 import { range } from '../util'
-import constants, { minLevel } from '../constants'
+import { minLevel } from '../constants'
 
 class WelcomeDialogue extends React.Component {
   constructor(props) {
@@ -11,9 +10,6 @@ class WelcomeDialogue extends React.Component {
     this.state = {
       level: null,
     }
-  }
-
-  componentDidMount() {
   }
 
   onChangeLevel(value) {
@@ -55,12 +51,8 @@ WelcomeDialogue.defaultProps = {
 }
 
 WelcomeDialogue.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   closeForm: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
 }
 
-const mapStateToProps = ({ app, board, game }) => ({
-})
-
-export default connect(mapStateToProps)(WelcomeDialogue)
+export default WelcomeDialogue

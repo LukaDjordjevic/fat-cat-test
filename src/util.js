@@ -18,10 +18,8 @@ export const createLevel = (x, y, levelNumber, numberOfBoardSquares) => {
     lastField = [nextField[0], nextField[1]]
   }
   if (allOk) {
-    console.log('allOk')
     return levelFields
   } else {
-    console.log('Fokked up, starting over')
     return createLevel(x, y, levelNumber, numberOfBoardSquares)
   }
 }

@@ -48,14 +48,6 @@ export default (state = initialState, action) => {
         leftToClick: action.payload,
       }
 
-    // case constants.SET_LEVEL:
-    //   const newLevels = JSON.parse(JSON.strinfigy(state.levels))
-    //   newLevels[action.payload.levelNum] = action.payload.level
-    //   return {
-    //     ...state,
-    //     levels: newLevels,
-    //   }
-
     default:
       return state
   }

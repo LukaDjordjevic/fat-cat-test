@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import constants, { minLevel } from '../constants'
+import constants from '../constants'
 import Board from './Board'
 import UserForm from '../components/UserForm'
 import DialogueBox from '../components/DialogueBox'
@@ -12,18 +12,15 @@ import TopBar from '../components/TopBar'
 class Layout extends Component {
   constructor(props) {
     super(props)
+    // *** Useful for debugging purposes
     // localStorage.removeItem('lastUser')
     // localStorage.removeItem('users')
-    // localStorage.removeItem('lastCompletedLevel')
     this.lastUser = localStorage.getItem('lastUser')
     let users = localStorage.getItem('users')
     if (users) {
       users = JSON.parse(users)
       this.user = users.find(user => user.name === this.lastUser)
     }
-    console.log(this.user)
-    // console.log(user)
-    // this.maxCompletedLevel = localStorage.getItem('lastCompletedLevel')
     this.state = {
       boardSize: 0,
       showUserForm: !this.lastUser,
@@ -44,9 +41,7 @@ class Layout extends Component {
   componentDidMount() {
     this.setBoardDimensions()
     window.addEventListener('resize', this.onWindowResize);
-    // const startingLevel = Math.max(this.maxCompletedLevel + 1, minLevel)
     this.props.dispatch({ type: constants.SET_USER, payload: this.lastUser})
-    // this.props.dispatch({ type: constants.SET_CURRENT_LEVEL, payload: startingLevel })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -91,16 +86,12 @@ class Layout extends Component {
     this.props.dispatch({ type: constants.SET_CURRENT_MOVE, payload: 1 })
     this.props.dispatch({ type: constants.SET_SELECTING_INITIAL_SQUARE, payload: true })
     this.props.dispatch({ type: constants.CLEAR_BOARD })
-    console.log(this.user)
     let users = localStorage.getItem('users')
     if (users) {
       users = JSON.parse(users)
-      // this.user = users.find(user => user.name === this.props.user)
       const userIdx = users.findIndex(user => user.name === this.props.currentUser)
-      console.log('123123', userIdx, users[userIdx])
       const user = { ...users[userIdx] }
       if (user.maxCompletedLevel < this.props.currentLevel) user.maxCompletedLevel = this.props.currentLevel
-      console.log ('modified', user)
       users[userIdx] = user
       localStorage.setItem('users', JSON.stringify(users))
     }

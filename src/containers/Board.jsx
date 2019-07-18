@@ -2,26 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import constants, { numberOfBoardSquares } from '../constants'
-import { createLevel, getLegalMoves } from '../util'
+import { createLevel } from '../util'
 
 class Board extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-    }
-    this.config = {
-      numberOfLevels: 99,
-    }
-
-    // this.loadLevel = this.loadLevel.bind(this)
-  }
-
-  componentDidMount() {
-    // this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: 0, y: 0, state: 'finished' }})
-    // this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: 3, y: 3, state: 'legalMove' }})
-  }
-
   getSquareProps(x, y) {
     const { boardState } = this.props
     let color = 'white'
@@ -45,21 +28,12 @@ class Board extends Component {
     this.props.dispatch({ type: constants.LOAD_LEVEL, payload: level })
     this.props.dispatch({ type: constants.SET_LEFT_TO_CLICK, payload: this.props.currentLevel })
     this.props.dispatch({ type: constants.SET_SELECTING_INITIAL_SQUARE, payload: false })
-    // this.props.startTimer()
   }
 
   handleLegalMoveClick(x, y) {
-    // console.log('12345', this.props.numberOfLegalMoves, this.props.leftToClick)
-    // if (this.props.currentMove === this.props.currentLevel) { // Game successfully completed
-    //   this.props.stopTimer()
-    // }
-    // if (!this.props.numberOfLegalMoves && this.props.leftToClick) { // Game lost
-    //   this.props.stopTimer()
-    // }
     this.props.dispatch({ type: constants.UPDATE_BOARD, payload: { x, y } })
     this.props.dispatch({ type: constants.SET_CURRENT_MOVE, payload: this.props.currentMove + 1 })
     this.props.dispatch({ type: constants.SET_LEFT_TO_CLICK, payload: this.props.leftToClick - 1 })
-    // this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
   }
 
   renderBoard() {
@@ -73,7 +47,6 @@ class Board extends Component {
         if (this.props.selectingInitialSquare) {
           onClick = () => this.handleInitialSquareSelect(x, y)
         } else if (type === 'legalMove') {
-          console.log('found legal move')
           onClick = () => this.handleLegalMoveClick(x, y)
         } else {
           onClick = null
@@ -119,7 +92,6 @@ Board.propTypes = {
   leftToClick: PropTypes.number,
   currentMove: PropTypes.number,
   moveTime: PropTypes.number,
-  // numberOfLegalMoves: PropTypes.number,
   selectingInitialSquare: PropTypes.bool.isRequired,
 }
 
@@ -130,7 +102,6 @@ const mapStateToProps = ({ app, board, game }) => ({
   moveTime: game.moveTime,
   currentMove: game.currentMove,
   selectingInitialSquare: game.selectingInitialSquare,
-  // numberOfLegalMoves: board.numberOfLegalMoves,
 })
 
 export default connect(mapStateToProps)(Board)

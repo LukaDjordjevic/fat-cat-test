@@ -1,7 +1,6 @@
 import constants, { numberOfBoardSquares } from '../constants'
 import { getLegalMoves } from '../util'
 
-
 const initialState = {
   state: new Array(numberOfBoardSquares).fill(new Array(numberOfBoardSquares).fill('blank')),
   numberOfLegalMoves: 1,
@@ -11,14 +10,6 @@ export default (state = initialState, action) => {
   let numberOfLegalMoves = 0
   let legalMoves = []
   switch (action.type) {
-    // case constants.SET_PIECE_STATE:
-    // const newBoardState = JSON.parse(JSON.stringify(state.state))  // Do i need this?
-    // newBoardState[action.payload.x][action.payload.y] = action.payload.state
-    // return {
-    //   ...state,
-    //   state: newBoardState
-    // }
-
     case constants.CLEAR_BOARD:
       return {
         ...state,
@@ -50,7 +41,6 @@ export default (state = initialState, action) => {
       const updatedBoardState = JSON.parse(JSON.stringify(state.state))
       updatedBoardState[action.payload.x][action.payload.y] = 'finished'
       legalMoves = getLegalMoves(action.payload.x, action.payload.y, numberOfBoardSquares)
-      console.log('legal moves', legalMoves)
       // Clear legal move fields
       for (let x = 0; x < numberOfBoardSquares; x++) {
         for (let y = 0; y < numberOfBoardSquares; y++) {

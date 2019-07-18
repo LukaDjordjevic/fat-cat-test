@@ -15,13 +15,9 @@ class UserForm extends React.Component {
 
     const users = localStorage.getItem('users')
     this.users = users ? JSON.parse(localStorage.getItem('users')) : null
-
     this.onCreateUser = this.onCreateUser.bind(this)
     this.onSelectUser = this.onSelectUser.bind(this)
     this.onChangeLevel = this.onChangeLevel.bind(this)
-  }
-
-  componentDidMount() {
   }
 
   onSelectUser(value) {
@@ -41,12 +37,12 @@ class UserForm extends React.Component {
     localStorage.setItem('lastUser', this.state.user)
     this.props.dispatch({ type: constants.SET_USER, payload: this.state.user})
     this.props.closeForm()
-    console.log('users:', users)
   }
 
   onChangeLevel(value) {
     this.setState({ level: value })
   }
+  
   render() {
     const { Option } = Select
     const levels = range(1, numberOfBoardSquares * numberOfBoardSquares).map(level => <Option key={level}>{level}</Option>)
