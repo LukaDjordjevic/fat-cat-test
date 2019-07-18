@@ -34,8 +34,9 @@ class UserForm extends React.Component {
     const users = this.users ? JSON.parse(JSON.stringify(this.users)) : []
     users.push({ 
       name: this.state.user,
-      level: parseInt(this.state.level),
+      prefferedStartingLevel: parseInt(this.state.level),
       lastCompletedLevel: 0,
+      levelStats: [],
     })
     localStorage.setItem('users', JSON.stringify(users))
     localStorage.setItem('lastUser', this.state.user)

@@ -7,10 +7,9 @@ export const createLevel = (x, y, levelNumber, numberOfBoardSquares) => {
   const levelFields = [[x, y]]
   let lastField = [x, y]
   let allOk = true
-  for (let i = 0; i < levelNumber - 1; i++) {
+  for (let i = 0; i < levelNumber; i++) {
     const availableFields = getAvailableFields(lastField[0], lastField[1], numberOfBoardSquares, levelFields)
     if (!availableFields.length) {
-      console.log('No more available fields left, fok')
       allOk = false
       break
     }
@@ -20,7 +19,6 @@ export const createLevel = (x, y, levelNumber, numberOfBoardSquares) => {
   }
   if (allOk) {
     console.log('allOk')
-    console.log(levelFields)
     return levelFields
   } else {
     console.log('Foked up, starting over')
@@ -47,5 +45,5 @@ const isFieldValid = (x, y, numberOfBoardSquares) => {
 }
 
 // getAvailableFields(0, 0, 10, [[2, 2]])
-const level = createLevel(5, 5, 80, 10)
-console.log('returned level', level)
+// const level = createLevel(5, 5, 50, 10)
+// console.log('returned level', level)

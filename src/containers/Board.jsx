@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import constants, { numberOfBoardSquares } from '../constants'
+import { createLevel } from '../util'
 
 class Board extends Component {
   constructor(props) {
@@ -13,6 +14,8 @@ class Board extends Component {
     this.config = {
       numberOfLevels: 99,
     }
+
+    // this.loadLevel = this.loadLevel.bind(this)
   }
 
   componentDidMount() {
@@ -23,13 +26,15 @@ class Board extends Component {
   getSquareProps(x, y) {
     const { boardState } = this.props
     let color = 'white'
-
     switch(boardState[x][y]) {
       case 'finished':
-        color = 'green'
+        color = '#0F0'
         break
       case 'legalMove':
         color = 'orange'
+        break
+      case 'unfinished':
+        color = 'darkgreen'
         break
       default:
     }
@@ -42,6 +47,8 @@ class Board extends Component {
 
   handleInitialSquareSelect(x, y) {
     console.log('initial square select clicked', x, y)
+    const level = createLevel(x, y, this.props.currentLevel, numberOfBoardSquares)
+    this.props.dispatch({ type: constants.LOAD_LEVEL, payload: level })
   }
 
   renderBoard() {
@@ -59,7 +66,7 @@ class Board extends Component {
         }
         boardSquares.push(
           <div
-            key={`${x}${y}`}
+            key={`${x},${y}`}
             className="board-square"
             onClick={onClick}
             style={{
@@ -92,10 +99,12 @@ Board.defaultProps = {
 Board.propTypes = {
   dispatch: PropTypes.func.isRequired,
   boardSize: PropTypes.number,
+  currentLevel: PropTypes.number,
 }
 
-const mapStateToProps = ({ app, board }) => ({
-  boardState: board.state
+const mapStateToProps = ({ app, board, game }) => ({
+  boardState: board.state,
+  currentLevel: game.currentLevel,
 })
 
 export default connect(mapStateToProps)(Board)

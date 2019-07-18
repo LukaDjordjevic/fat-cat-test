@@ -6,11 +6,13 @@ export default keykey([
 
   // Board
   'SET_PIECE_STATE',
+  'CLEAR_BOARD',
+  'LOAD_LEVEL',
 
   // Game
+  'SET_TIME',
   // 'SET_CURRENT_MOVE',
   // 'SET_CURRENT_LEVEL',
-  'SET_TIME',
 
 ])
 
