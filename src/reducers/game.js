@@ -6,6 +6,7 @@ const initialState = {
   currentMove: 1,
   lives: 1,
   leftToClick: undefined,
+  selectingInitialSquare: true,
   moveTime: 0,
 }
 
@@ -23,6 +24,12 @@ export default (state = initialState, action) => {
         moveTime: action.payload,
       }
 
+    case constants.SET_SELECTING_INITIAL_SQUARE:
+      return {
+        ...state,
+        selectingInitialSquare: action.payload,
+      }
+
     // case constants.SET_CURRENT_MOVE:
     //   return {
     //     ...state,
@@ -35,11 +42,11 @@ export default (state = initialState, action) => {
     //     currentLevel: action.payload,
     //   }
   
-    // case constants.SET_LEFT_TO_CLICK:
-    //   return {
-    //     ...state,
-    //     leftToClick: action.payload,
-    //   }
+    case constants.SET_LEFT_TO_CLICK:
+      return {
+        ...state,
+        leftToClick: action.payload,
+      }
 
     // case constants.SET_LEVEL:
     //   const newLevels = JSON.parse(JSON.strinfigy(state.levels))

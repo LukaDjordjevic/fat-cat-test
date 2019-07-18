@@ -21,16 +21,28 @@ export const createLevel = (x, y, levelNumber, numberOfBoardSquares) => {
     console.log('allOk')
     return levelFields
   } else {
-    console.log('Foked up, starting over')
+    console.log('Fokked up, starting over')
     return createLevel(x, y, levelNumber, numberOfBoardSquares)
   }
 }
 
+export const getLegalMoves = (x, y, numberOfBoardSquares) => {
+  const possibleFields = [[x, y - 3], [x + 2, y - 2], [x + 3, y], [x + 2, y + 2], [x, y + 3], [x - 2, y + 2], [x - 3, y], [x - 2, y - 2]]
+  const legalMoves = possibleFields.reduce((acc, field) => {
+    if (isFieldValid(field[0], field[1], numberOfBoardSquares)) {
+      acc.push(field)
+      return acc
+    }
+    return acc
+  }, [])
+  return legalMoves
+}
+
 const getAvailableFields = (x, y, numberOfBoardSquares, levelFields) => {
-  const surroundingFields = [[x, y - 3], [x + 2, y - 2], [x + 3, y], [x + 2, y + 2], [x, y + 3], [x - 2, y + 2], [x - 3, y], [x - 2, y - 2]]
   const stringifiedLevelFields = levelFields.map(field => `${field[0]},${field[1]}`)
-  const availableFields = surroundingFields.reduce((acc, field) => {
-    if (isFieldValid(field[0], field[1], numberOfBoardSquares) && !stringifiedLevelFields.includes(`${field[0]},${field[1]}`)) {
+  const legalMoves = getLegalMoves(x, y, numberOfBoardSquares)
+  const availableFields = legalMoves.reduce((acc, field) => {
+    if (!stringifiedLevelFields.includes(`${field[0]},${field[1]}`)) {
       acc.push(field)
       return acc
     }
@@ -47,3 +59,4 @@ const isFieldValid = (x, y, numberOfBoardSquares) => {
 // getAvailableFields(0, 0, 10, [[2, 2]])
 // const level = createLevel(5, 5, 50, 10)
 // console.log('returned level', level)
+// console.log(getLegalMoves(0, 0, 10))
