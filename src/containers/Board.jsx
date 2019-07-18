@@ -41,19 +41,20 @@ class Board extends Component {
   }
 
   handleLegalMoveClick(x, y) {
-    const boardState = JSON.parse(JSON.stringify(this.props.boardState))
-    this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x, y, state: 'finished' }})
-    const legalMoves = getLegalMoves(x, y, numberOfBoardSquares)
-    console.log('legal moves', legalMoves)
+    // const boardState = JSON.parse(JSON.stringify(this.props.boardState))
+    // this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x, y, state: 'finished' }})
+    // const legalMoves = getLegalMoves(x, y, numberOfBoardSquares)
+    // console.log('legal moves', legalMoves)
 
-    legalMoves.forEach(field => {
-      if (boardState[field[0]][field[1]] === 'unfinished') {
-        this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: field[0], y: field[1], state: 'legalMove' }})
-      }
-    })
-    if (this.props.leftToClick === 1) { // Game end
-      console.log('Wiiiii!!!!')
-    }
+    // legalMoves.forEach(field => {
+    //   if (boardState[field[0]][field[1]] === 'unfinished') {
+    //     this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: field[0], y: field[1], state: 'legalMove' }})
+    //   }
+    // })
+    // if (this.props.leftToClick === 1) { // Game end
+    //   console.log('Wiiiii!!!!')
+    // }
+    this.props.dispatch({ type: constants.UPDATE_BOARD, payload: { x, y } })
     this.props.dispatch({ type: constants.SET_LEFT_TO_CLICK, payload: this.props.leftToClick - 1 })
     this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
 

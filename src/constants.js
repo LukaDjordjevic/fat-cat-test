@@ -5,9 +5,10 @@ export default keykey([
   'SET_USER',
 
   // Board
-  'SET_PIECE_STATE',
+  // 'SET_PIECE_STATE',
   'CLEAR_BOARD',
   'LOAD_LEVEL',
+  'UPDATE_BOARD',
 
   // Game
   'SET_TIME',
