@@ -48,7 +48,6 @@ const getAvailableFields = (x, y, numberOfBoardSquares, levelFields) => {
     }
     return acc
   }, [])
-  // console.log('got available fields', availableFields)
   return availableFields
 }
 
@@ -56,7 +55,3 @@ const isFieldValid = (x, y, numberOfBoardSquares) => {
   return x >= 0 && x < numberOfBoardSquares && y >=0 && y < numberOfBoardSquares
 }
 
-// getAvailableFields(0, 0, 10, [[2, 2]])
-// const level = createLevel(5, 5, 50, 10)
-// console.log('returned level', level)
-// console.log(getLegalMoves(0, 0, 10))

@@ -16,10 +16,12 @@ class Layout extends Component {
       boardSize: 0,
       showUserForm: !this.lastUser,
     }
+    this.timer = null
+
     this.onWindowResize = this.onWindowResize.bind(this)
     this.showUserForm = this.showUserForm.bind(this)
     this.closeUserForm = this.closeUserForm.bind(this)
-
+    this.startTimer = this.startTimer.bind(this)
   }
 
   componentDidMount() {
@@ -28,9 +30,6 @@ class Layout extends Component {
     // localStorage.removeItem('lastUser')
     // localStorage.removeItem('users')
     this.props.dispatch({ type: constants.SET_USER, payload: this.lastUser})
-    // const timer = setInterval(() => {
-    //   this.props.dispatch({ type: constants.SET_TIME, payload: this.props.moveTime + 1})
-    // }, 1000)
   }
 
   componentWillUnmount() {
@@ -49,7 +48,6 @@ class Layout extends Component {
     this.setState({ showUserForm: false })
   }
 
-  
   setBoardDimensions() {
     if (this.boardDiv) {
       const boardDivRect = this.boardDiv.getBoundingClientRect()
@@ -57,6 +55,12 @@ class Layout extends Component {
         boardSize: Math.min(boardDivRect.width, boardDivRect.height)
       })
     }
+  }
+
+  startTimer() {
+    this.timer = setInterval(() => {
+      this.props.dispatch({ type: constants.SET_TIME, payload: this.props.moveTime + 1})
+    }, 1000)
   }
 
   render() {
@@ -67,7 +71,7 @@ class Layout extends Component {
         </div>
         <div className="board-div" ref={el => this.boardDiv = el}>
           <div className="board" style={{ width: `${this.state.boardSize}px`, height: `${this.state.boardSize}px` }}>
-            <Board boardSize={this.state.boardSize}/>
+            <Board boardSize={this.state.boardSize} startTimer={this.startTimer}/>
           </div>
         </div>
         <div className="game-stats" style={{ width: `${Math.max(this.state.boardSize, 350)}px` }}>
@@ -84,10 +88,11 @@ Layout.defaultProps = {
 
 Layout.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  moveTime: PropTypes.number.isRequired,
 }
 
 const mapStateToProps = ({ app, board, game }) => ({
-  // moveTime: game.moveTime,
+  moveTime: game.moveTime,
 })
 
 export default connect(mapStateToProps)(Layout)

@@ -40,34 +40,19 @@ class Board extends Component {
     return { color, type: boardState[x][y]}
   }
 
-  handleLegalMoveClick(x, y) {
-    // const boardState = JSON.parse(JSON.stringify(this.props.boardState))
-    // this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x, y, state: 'finished' }})
-    // const legalMoves = getLegalMoves(x, y, numberOfBoardSquares)
-    // console.log('legal moves', legalMoves)
-
-    // legalMoves.forEach(field => {
-    //   if (boardState[field[0]][field[1]] === 'unfinished') {
-    //     this.props.dispatch({ type: constants.SET_PIECE_STATE, payload: { x: field[0], y: field[1], state: 'legalMove' }})
-    //   }
-    // })
-    // if (this.props.leftToClick === 1) { // Game end
-    //   console.log('Wiiiii!!!!')
-    // }
-    this.props.dispatch({ type: constants.UPDATE_BOARD, payload: { x, y } })
-    this.props.dispatch({ type: constants.SET_LEFT_TO_CLICK, payload: this.props.leftToClick - 1 })
-    this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
-
-  }
-
   handleInitialSquareSelect(x, y) {
     const level = createLevel(x, y, this.props.currentLevel, numberOfBoardSquares)
     this.props.dispatch({ type: constants.LOAD_LEVEL, payload: level })
     this.props.dispatch({ type: constants.SET_LEFT_TO_CLICK, payload: this.props.currentLevel })
     this.props.dispatch({ type: constants.SET_SELECTING_INITIAL_SQUARE, payload: false })
-    // this.timer = setInterval(() => {
-    //   this.props.dispatch({ type: constants.SET_TIME, payload: this.props.moveTime + 1})
-    // }, 1000)
+    this.props.startTimer()
+  }
+
+  handleLegalMoveClick(x, y) {
+    this.props.dispatch({ type: constants.UPDATE_BOARD, payload: { x, y } })
+    this.props.dispatch({ type: constants.SET_CURRENT_MOVE, payload: this.props.currentMove + 1 })
+    this.props.dispatch({ type: constants.SET_LEFT_TO_CLICK, payload: this.props.leftToClick - 1 })
+    this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
   }
 
   renderBoard() {
@@ -120,9 +105,11 @@ Board.defaultProps = {
 
 Board.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  startTimer: PropTypes.func.isRequired,
   boardSize: PropTypes.number,
   currentLevel: PropTypes.number,
   leftToClick: PropTypes.number,
+  currentMove: PropTypes.number,
   moveTime: PropTypes.number,
   selectingInitialSquare: PropTypes.bool.isRequired,
 }
@@ -132,6 +119,7 @@ const mapStateToProps = ({ app, board, game }) => ({
   currentLevel: game.currentLevel,
   leftToClick: game.leftToClick,
   moveTime: game.moveTime,
+  currentMove: game.currentMove,
   selectingInitialSquare: game.selectingInitialSquare
 })
 

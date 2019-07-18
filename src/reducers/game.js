@@ -30,11 +30,11 @@ export default (state = initialState, action) => {
         selectingInitialSquare: action.payload,
       }
 
-    // case constants.SET_CURRENT_MOVE:
-    //   return {
-    //     ...state,
-    //     currentMove: action.payload,
-    //   }
+    case constants.SET_CURRENT_MOVE:
+      return {
+        ...state,
+        currentMove: action.payload,
+      }
   
     // case constants.SET_CURRENT_LEVEL:
     //   return {
