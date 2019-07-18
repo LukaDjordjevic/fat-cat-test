@@ -26,7 +26,6 @@ DalogueBox.defaultProps = {
 }
 
 DalogueBox.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   headline: PropTypes.string.isRequired,
   additionalText: PropTypes.string,

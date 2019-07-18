@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Input, Select, Button } from 'antd'
 import { range } from '../util'
-import constants, { numberOfBoardSquares } from '../constants'
+import constants, { numberOfBoardSquares, minLevel } from '../constants'
 
 class UserForm extends React.Component {
   constructor(props) {
@@ -35,7 +35,8 @@ class UserForm extends React.Component {
     })
     localStorage.setItem('users', JSON.stringify(users))
     localStorage.setItem('lastUser', this.state.user)
-    this.props.dispatch({ type: constants.SET_USER, payload: this.state.user})
+    this.props.dispatch({ type: constants.SET_USER, payload: this.state.user })
+    this.props.dispatch({ type: constants.SET_CURRENT_LEVEL, payload: minLevel })
     this.props.closeForm()
   }
 
