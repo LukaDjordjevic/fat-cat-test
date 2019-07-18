@@ -21,4 +21,4 @@ export default keykey([
 ])
 
 export const numberOfBoardSquares = 10
-export const startLevel = 5
+export const minLevel = 5

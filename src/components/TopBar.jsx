@@ -10,7 +10,6 @@ const TopBar = (props) => {
         {`Player: ${props.user}`}
       </div>
     </React.Fragment>
-
   )
 }
 
