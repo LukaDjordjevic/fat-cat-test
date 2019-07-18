@@ -40,7 +40,7 @@ class Layout extends Component {
     if (!nextProps.selectingInitialSquare && !nextProps.numberOfLegalMoves) {
       this.stopTimer()
     }
-    if(this.props.currentMove !== nextProps.currentMove) {
+    if(this.props.currentMove !== nextProps.currentMove && nextProps.numberOfLegalMoves) {
       this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
     }
     if(this.props.selectingInitialSquare && !nextProps.selectingInitialSquare) {

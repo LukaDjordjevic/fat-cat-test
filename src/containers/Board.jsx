@@ -59,7 +59,7 @@ class Board extends Component {
     this.props.dispatch({ type: constants.UPDATE_BOARD, payload: { x, y } })
     this.props.dispatch({ type: constants.SET_CURRENT_MOVE, payload: this.props.currentMove + 1 })
     this.props.dispatch({ type: constants.SET_LEFT_TO_CLICK, payload: this.props.leftToClick - 1 })
-    this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
+    // this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
   }
 
   renderBoard() {
