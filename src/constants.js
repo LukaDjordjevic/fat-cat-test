@@ -15,7 +15,8 @@ export default keykey([
   'SET_LEFT_TO_CLICK',
   'SET_SELECTING_INITIAL_SQUARE',
   'SET_CURRENT_MOVE',
-  // 'SET_CURRENT_LEVEL',
+  'SET_CURRENT_LEVEL',
+  'SET_LIVES',
 
 ])
 

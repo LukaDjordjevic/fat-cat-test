@@ -4,7 +4,7 @@ import { getLegalMoves } from '../util'
 
 const initialState = {
   state: new Array(numberOfBoardSquares).fill(new Array(numberOfBoardSquares).fill('blank')),
-  numberOfLegalMoves: 0,
+  numberOfLegalMoves: 1,
 }
 
 export default (state = initialState, action) => {

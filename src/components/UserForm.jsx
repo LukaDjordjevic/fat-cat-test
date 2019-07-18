@@ -49,7 +49,6 @@ class UserForm extends React.Component {
     this.setState({ level: value })
   }
   render() {
-    const { dispatch, currentUser } = this.props
     const { Option } = Select
     const levels = range(1, numberOfBoardSquares * numberOfBoardSquares).map(level => <Option key={level}>{level}</Option>)
     const users = this.users ? this.users.map(
@@ -83,11 +82,9 @@ class UserForm extends React.Component {
           <Input
             placeholder="New player name"
             className=""
-            // value={currentUser}
             onChange={(e) => {
               this.setState({ user: e.target.value })
             }}
-            // onPressEnter={this.onCreateUser}
           />
           <div style={{ height: '20px' }} />
           <div className="flex-row">
@@ -104,7 +101,6 @@ class UserForm extends React.Component {
               size="small"
               style={{ width: 100 }}
               placeholder="Select level"
-              // defaultValue="15"
               onChange={this.onChangeLevel}
             >
               {levels}

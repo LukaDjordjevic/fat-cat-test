@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import constants, { numberOfBoardSquares } from '../constants'
 import Board from './Board'
 import UserForm from '../components/UserForm'
+import DialogueBox from '../components/DialogueBox'
 import GameStats from '../components/GameStats'
 import TopBar from '../components/TopBar'
 
@@ -22,6 +23,8 @@ class Layout extends Component {
     this.showUserForm = this.showUserForm.bind(this)
     this.closeUserForm = this.closeUserForm.bind(this)
     this.startTimer = this.startTimer.bind(this)
+    this.startNewLevel = this.startNewLevel.bind(this)
+    this.handleGameLost = this.handleGameLost.bind(this)
   }
 
   componentDidMount() {
@@ -46,6 +49,29 @@ class Layout extends Component {
 
   closeUserForm() {
     this.setState({ showUserForm: false })
+  }
+
+  startNewLevel() {
+    if (this.timer) clearInterval(this.timer)
+    this.props.dispatch({ type: constants.SET_LIVES, payload: this.props.lives + 1 })
+    this.props.dispatch({ type: constants.SET_CURRENT_LEVEL, payload: this.props.currentLevel + 1 })
+    this.props.dispatch({ type: constants.SET_CURRENT_MOVE, payload: 1 })
+    this.props.dispatch({ type: constants.SET_SELECTING_INITIAL_SQUARE, payload: true })
+    this.props.dispatch({ type: constants.CLEAR_BOARD })
+  }
+
+  handleGameLost() {
+    if (this.timer) clearInterval(this.timer)
+    const newLives = this.props.lives - this.props.leftToClick
+    this.props.dispatch({ type: constants.SET_CURRENT_MOVE, payload: 1 })
+    this.props.dispatch({ type: constants.SET_SELECTING_INITIAL_SQUARE, payload: true })
+    this.props.dispatch({ type: constants.CLEAR_BOARD })
+    if (newLives > 0) {
+      this.props.dispatch({ type: constants.SET_LIVES, payload: newLives })
+    } else {
+      this.props.dispatch({ type: constants.SET_LIVES, payload: 1 })
+      this.props.dispatch({ type: constants.SET_CURRENT_LEVEL, payload: 1 })
+    }
   }
 
   setBoardDimensions() {
@@ -78,21 +104,46 @@ class Layout extends Component {
           <GameStats />
         </div>
         {this.state.showUserForm ? <UserForm closeForm={this.closeUserForm}/> : null}
+        {!this.props.selectingInitialSquare && !this.props.numberOfLegalMoves && !this.props.leftToClick ? 
+          <DialogueBox 
+            onClick={this.startNewLevel}
+            headline={`You have completed level ${this.props.currentLevel}.`}
+            additionalText="You gain one life."
+            buttonText="Ok"
+          /> : null}
+        {!this.props.selectingInitialSquare && !this.props.numberOfLegalMoves && this.props.leftToClick ? 
+          <DialogueBox 
+            onClick={this.handleGameLost}
+            headline="You have lost the game."
+            additionalText={`You lose ${this.props.leftToClick} lives.`}
+            buttonText="Ok"
+          /> : null}
       </div>
     )
   }
 }
 
 Layout.defaultProps = {
+  leftToClick: null,
 }
 
 Layout.propTypes = {
   dispatch: PropTypes.func.isRequired,
   moveTime: PropTypes.number.isRequired,
+  leftToClick: PropTypes.number,
+  currentLevel: PropTypes.number,
+  lives: PropTypes.number,
+  numberOfLegalMoves: PropTypes.number.isRequired,
+  selectingInitialSquare: PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = ({ app, board, game }) => ({
   moveTime: game.moveTime,
+  currentLevel: game.currentLevel,
+  leftToClick: game.leftToClick,
+  lives: game.lives,
+  numberOfLegalMoves: board.numberOfLegalMoves,
+  selectingInitialSquare: game.selectingInitialSquare,
 })
 
 export default connect(mapStateToProps)(Layout)
