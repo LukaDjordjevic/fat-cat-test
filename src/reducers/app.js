@@ -1,7 +1,7 @@
 import constants from '../constants'
 
 const initialState = {
-  user: '',
+  currentUser: '',
 }
 
 export default (state = initialState, action) => {
@@ -9,7 +9,7 @@ export default (state = initialState, action) => {
     case constants.SET_USER:
       return {
         ...state,
-        user: action.payload,
+        currentUser: action.payload,
       }
 
     default:

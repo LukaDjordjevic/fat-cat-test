@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import constants, { numberOfBoardSquares } from '../constants'
 import Board from './Board'
+import UserForm from '../components/UserForm'
 import GameStats from '../components/GameStats'
 
 class Layout extends Component {
@@ -11,9 +12,11 @@ class Layout extends Component {
 
     this.state = {
       boardSize: 0,
+      showUserForm: true,
     }
 
     this.onWindowResize = this.onWindowResize.bind(this)
+    this.closeUserForm = this.closeUserForm.bind(this)
 
   }
 
@@ -28,7 +31,10 @@ class Layout extends Component {
   
   onWindowResize() {
     this.setBoardDimensions()
-    console.log('resize', this.boardDiv.getBoundingClientRect())
+  }
+
+  closeUserForm() {
+    this.setState({ showUserForm: false })
   }
   
   setBoardDimensions() {
@@ -43,6 +49,9 @@ class Layout extends Component {
   render() {
     return (
       <div className="layout">
+        <div className="game-stats" style={{ width: `${Math.max(this.state.boardSize, 350)}px` }}>
+          <GameStats />
+        </div>
         <div className="board-div" ref={el => this.boardDiv = el}>
           <div className="board" style={{ width: `${this.state.boardSize}px`, height: `${this.state.boardSize}px` }}>
             <Board boardSize={this.state.boardSize}/>
@@ -51,7 +60,7 @@ class Layout extends Component {
         <div className="game-stats" style={{ width: `${Math.max(this.state.boardSize, 350)}px` }}>
           <GameStats />
         </div>
-        
+        {this.state.showUserForm ? <UserForm closeForm={this.closeUserForm}/> : null}
       </div>
     )
   }

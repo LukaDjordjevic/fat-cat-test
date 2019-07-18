@@ -7,6 +7,7 @@ import configureStore from './store'
 import './styles/app.css'
 import './styles/board.css'
 import './styles/game-stats.css'
+import './styles/dialogue-boxes.css'
 
 export const store = configureStore()
 const RootComponent = (
