@@ -5,17 +5,19 @@ import constants, { numberOfBoardSquares } from '../constants'
 import Board from './Board'
 import UserForm from '../components/UserForm'
 import GameStats from '../components/GameStats'
+import TopBar from '../components/TopBar'
 
 class Layout extends Component {
   constructor(props) {
     super(props)
 
+    this.lastUser = localStorage.getItem('lastUser')
     this.state = {
       boardSize: 0,
-      showUserForm: true,
+      showUserForm: !this.lastUser,
     }
-
     this.onWindowResize = this.onWindowResize.bind(this)
+    this.showUserForm = this.showUserForm.bind(this)
     this.closeUserForm = this.closeUserForm.bind(this)
 
   }
@@ -23,6 +25,9 @@ class Layout extends Component {
   componentDidMount() {
     this.setBoardDimensions()
     window.addEventListener('resize', this.onWindowResize);
+    // localStorage.removeItem('lastUser')
+    // localStorage.removeItem('users')
+    this.props.dispatch({ type: constants.SET_USER, payload: this.lastUser})
   }
 
   componentWillUnmount() {
@@ -33,9 +38,14 @@ class Layout extends Component {
     this.setBoardDimensions()
   }
 
+  showUserForm() {
+    this.setState({ showUserForm: true })
+  }
+
   closeUserForm() {
     this.setState({ showUserForm: false })
   }
+
   
   setBoardDimensions() {
     if (this.boardDiv) {
@@ -49,8 +59,8 @@ class Layout extends Component {
   render() {
     return (
       <div className="layout">
-        <div className="game-stats" style={{ width: `${Math.max(this.state.boardSize, 350)}px` }}>
-          <GameStats />
+        <div className="top-bar" style={{ width: `${Math.max(this.state.boardSize, 350)}px` }}>
+          <TopBar showUserForm={this.showUserForm}/>
         </div>
         <div className="board-div" ref={el => this.boardDiv = el}>
           <div className="board" style={{ width: `${this.state.boardSize}px`, height: `${this.state.boardSize}px` }}>

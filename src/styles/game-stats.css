@@ -7,6 +7,15 @@
   font-size: 12px;
 }
 
+.top-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 12px;
+}
+
 .stats-item {
   color: white;
   padding: 0 10px;

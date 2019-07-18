@@ -53,3 +53,10 @@ body {
   margin-bottom: 10px;
   background-color: darkcyan;
 }
+
+.top-bar {
+  height: 30px;
+  flex: 0 0 30px;
+  margin-top: 10px;
+  background-color: darkcyan;
+}

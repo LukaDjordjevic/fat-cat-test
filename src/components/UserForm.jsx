@@ -12,7 +12,6 @@ class UserForm extends React.Component {
       user: '',
       level: null,
     }
-    // localStorage.removeItem('users')
 
     const users = localStorage.getItem('users')
     this.users = users ? JSON.parse(localStorage.getItem('users')) : null
@@ -28,6 +27,7 @@ class UserForm extends React.Component {
 
   onSelectUser(value) {
     this.props.dispatch({ type: constants.SET_USER, payload: value})
+    localStorage.setItem('lastUser', value)
     this.props.closeForm()
   }
 
@@ -37,6 +37,7 @@ class UserForm extends React.Component {
     const users = this.users ? JSON.parse(JSON.stringify(this.users)) : []
     users.push({ name: this.state.user, level: parseInt(this.state.level) })
     localStorage.setItem('users', JSON.stringify(users))
+    localStorage.setItem('lastUser', this.state.user)
     this.props.dispatch({ type: constants.SET_USER, payload: this.state.user})
     this.props.closeForm()
     console.log('users:', users)
@@ -49,7 +50,6 @@ class UserForm extends React.Component {
     const { dispatch, currentUser } = this.props
     const { Option } = Select
     const levels = range(1, numberOfBoardSquares * numberOfBoardSquares).map(level => <Option key={level}>{level}</Option>)
-    console.log(this.users)
     const users = this.users ? this.users.map(
       user => (
         <Option key={user.name} value={user.name}>
