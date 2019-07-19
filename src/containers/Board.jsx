@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import constants, { numberOfBoardSquares } from '../constants'
-import { createLevel } from '../util'
+import { numberOfBoardSquares } from '../constants'
 
 class Board extends Component {
   getSquareProps(x, y) {
@@ -23,19 +22,6 @@ class Board extends Component {
     return { color, type: boardState[x][y]}
   }
 
-  handleInitialSquareSelect(x, y) {
-    const level = createLevel(x, y, this.props.currentLevel, numberOfBoardSquares)
-    this.props.dispatch({ type: constants.LOAD_LEVEL, payload: level })
-    this.props.dispatch({ type: constants.SET_LEFT_TO_CLICK, payload: this.props.currentLevel })
-    this.props.dispatch({ type: constants.SET_SELECTING_INITIAL_SQUARE, payload: false })
-  }
-
-  handleLegalMoveClick(x, y) {
-    this.props.dispatch({ type: constants.UPDATE_BOARD, payload: { x, y } })
-    this.props.dispatch({ type: constants.SET_CURRENT_MOVE, payload: this.props.currentMove + 1 })
-    this.props.dispatch({ type: constants.SET_LEFT_TO_CLICK, payload: this.props.leftToClick - 1 })
-  }
-
   renderBoard() {
     const { boardState, boardSize } = this.props
     const boardSquares = []
@@ -46,9 +32,9 @@ class Board extends Component {
         const isClickable = (boardState[x][y] === 'legalMove') || (this.props.selectingInitialSquare)
         const { color, type } = this.getSquareProps(x, y)
         if (this.props.selectingInitialSquare) {
-          onClick = () => this.handleInitialSquareSelect(x, y)
+          onClick = () => this.props.handleInitialSquareSelect(x, y)
         } else if (type === 'legalMove') {
-          onClick = () => this.handleLegalMoveClick(x, y)
+          onClick = () => this.props.handleLegalMoveClick(x, y)
         } else {
           onClick = null
         }
@@ -85,23 +71,14 @@ Board.defaultProps = {
 }
 
 Board.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  startTimer: PropTypes.func.isRequired,
-  stopTimer: PropTypes.func.isRequired,
   boardSize: PropTypes.number,
-  currentLevel: PropTypes.number,
-  leftToClick: PropTypes.number,
-  currentMove: PropTypes.number,
-  moveTime: PropTypes.number,
-  selectingInitialSquare: PropTypes.bool.isRequired,
+  boardState: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
+  handleLegalMoveClick: PropTypes.func.isRequired,
+  handleInitialSquareSelect: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = ({ app, board, game }) => ({
   boardState: board.state,
-  currentLevel: game.currentLevel,
-  leftToClick: game.leftToClick,
-  moveTime: game.moveTime,
-  currentMove: game.currentMove,
   selectingInitialSquare: game.selectingInitialSquare,
 })
 

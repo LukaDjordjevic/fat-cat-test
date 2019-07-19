@@ -1,7 +1,8 @@
 import constants from '../constants'
 
 const initialState = {
-  currentUser: '',
+  currentUser: {},
+  users: [],
 }
 
 export default (state = initialState, action) => {
@@ -10,6 +11,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         currentUser: action.payload,
+      }
+
+    case constants.SET_USERS:
+      return {
+        ...state,
+        users: action.payload,
       }
 
     default:

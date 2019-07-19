@@ -6,7 +6,7 @@ const TopBar = (props) => {
   return (
     <React.Fragment>
       <div className='stats-item' style={{ cursor: 'pointer' }} onClick={props.showUserForm}>
-        {`Player: ${props.user}`}
+        {`Player: ${props.user.name}`}
       </div>
     </React.Fragment>
   )
@@ -19,7 +19,7 @@ TopBar.defaultProps = {
 TopBar.propTypes = {
   dispatch: PropTypes.func.isRequired,
   showUserForm: PropTypes.func.isRequired,
-  user: PropTypes.string
+  user: PropTypes.object,
 }
 
 const mapStateToProps = ({ app, board, game }) => ({

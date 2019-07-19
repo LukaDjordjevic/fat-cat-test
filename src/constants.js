@@ -3,6 +3,7 @@ import keykey from 'keykey'
 export default keykey([
   // App
   'SET_USER',
+  'SET_USERS',
 
   // Board
   'CLEAR_BOARD',
@@ -18,5 +19,5 @@ export default keykey([
   'SET_LIVES',
 ])
 
-export const numberOfBoardSquares = 10
-export const minLevel = 6
+export const numberOfBoardSquares = 10 // Number of board row squares
+export const minLevel = 6 // Minimal playable level
