@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Input, Select, Button } from 'antd'
+import { Input, Select, Button, Icon } from 'antd'
 import { range } from '../util'
 import constants, { numberOfBoardSquares, minLevel } from '../constants'
 
@@ -23,7 +23,6 @@ class UserForm extends React.Component {
   onSelectUser(value) {
     this.props.dispatch({ type: constants.SET_USER, payload: value})
     localStorage.setItem('lastUser', value)
-    this.props.closeForm()
   }
 
   onCreateUser() {
@@ -37,7 +36,6 @@ class UserForm extends React.Component {
     localStorage.setItem('lastUser', this.state.user)
     this.props.dispatch({ type: constants.SET_USER, payload: this.state.user })
     this.props.dispatch({ type: constants.SET_CURRENT_LEVEL, payload: minLevel })
-    this.props.closeForm()
   }
 
   onChangeLevel(value) {
@@ -57,6 +55,8 @@ class UserForm extends React.Component {
     return (
       <div className="modal">
         <div className="basic-form" style={{ width: '260px' }}>
+          <Icon type="close" onClick={this.props.closeForm} />
+          <div style={{ height: '10px' }} />
           {this.users ? 
             <div>
               <div className="form-headline">Click to choose a player</div>

@@ -48,6 +48,7 @@ class WelcomeDialogue extends React.Component {
 }
 
 WelcomeDialogue.defaultProps = {
+  user: {},
 }
 
 WelcomeDialogue.propTypes = {

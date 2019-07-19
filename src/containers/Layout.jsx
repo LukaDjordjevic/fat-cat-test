@@ -12,7 +12,7 @@ import TopBar from '../components/TopBar'
 class Layout extends Component {
   constructor(props) {
     super(props)
-    // *** Useful for debugging purposes
+    // *** Clears cache. Useful for debugging purposes
     // localStorage.removeItem('lastUser')
     // localStorage.removeItem('users')
     this.lastUser = localStorage.getItem('lastUser')
@@ -20,18 +20,19 @@ class Layout extends Component {
     if (users) {
       users = JSON.parse(users)
       this.user = users.find(user => user.name === this.lastUser)
+      this.props.dispatch({ type: constants.SET_USER, payload: this.user.name })
     }
     this.state = {
       boardSize: 0,
       showUserForm: !this.lastUser,
       showWelcomeDialogue: this.lastUser,
     }
-    this.timer = null
 
+    this.timer = null
     this.onWindowResize = this.onWindowResize.bind(this)
     this.showUserForm = this.showUserForm.bind(this)
-    this.closeUserForm = this.closeUserForm.bind(this)
     this.closeWelcomeDialogue = this.closeWelcomeDialogue.bind(this)
+    this.closeUserForm = this.closeUserForm.bind(this)
     this.startTimer = this.startTimer.bind(this)
     this.stopTimer = this.stopTimer.bind(this)
     this.startNewLevel = this.startNewLevel.bind(this)
@@ -41,7 +42,6 @@ class Layout extends Component {
   componentDidMount() {
     this.setBoardDimensions()
     window.addEventListener('resize', this.onWindowResize);
-    this.props.dispatch({ type: constants.SET_USER, payload: this.lastUser})
   }
 
   componentWillReceiveProps(nextProps) {
@@ -53,6 +53,21 @@ class Layout extends Component {
     }
     if(this.props.currentMove !== nextProps.currentMove && nextProps.numberOfLegalMoves) { // New move
       this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
+    }
+    if(this.props.currentUser !== nextProps.currentUser) { // User has chaged
+      let users = localStorage.getItem('users')
+      if (users) {
+        users = JSON.parse(users)
+        this.user = users.find(user => user.name === nextProps.currentUser)
+      }
+      this.props.dispatch({ type: constants.CLEAR_BOARD })
+      this.props.dispatch({ type: constants.SET_SELECTING_INITIAL_SQUARE, payload: true })
+      this.setState({ showUserForm: false, showWelcomeDialogue: true })
+      this.stopTimer()
+      this.props.dispatch({ type: constants.SET_TIME, payload: 0 })
+    }
+    if(this.props.currentLevel !== nextProps.currentLevel) { // Level has changed
+      this.props.dispatch({ type: constants.SET_LEFT_TO_CLICK, payload: nextProps.currentLevel })
     }
   }
 
@@ -148,11 +163,11 @@ class Layout extends Component {
           <GameStats />
         </div>
         {this.state.showUserForm ?
-          <UserForm 
+          <UserForm
             closeForm={this.closeUserForm}
             /> : null}
         {this.state.showWelcomeDialogue ?
-          <WelcomeDialogue 
+          <WelcomeDialogue
             closeForm={this.closeWelcomeDialogue}
             user={this.user}
           /> : null}

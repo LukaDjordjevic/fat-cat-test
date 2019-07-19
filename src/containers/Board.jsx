@@ -43,6 +43,7 @@ class Board extends Component {
     let onClick
     for (let x = 0; x < numberOfBoardSquares; x++) {
       for (let y = 0; y < numberOfBoardSquares; y++) {
+        const isClickable = (boardState[x][y] === 'legalMove') || (this.props.selectingInitialSquare)
         const { color, type } = this.getSquareProps(x, y)
         if (this.props.selectingInitialSquare) {
           onClick = () => this.handleInitialSquareSelect(x, y)
@@ -62,7 +63,7 @@ class Board extends Component {
               width: `${squareSize}px`,
               height: `${squareSize}px`,
               backgroundColor: color,
-              cursor: boardState[x][y] === 'legalMove' ? 'pointer' : 'default' }}
+              cursor: isClickable ? 'pointer' : 'default' }}
           />
         )
       }
