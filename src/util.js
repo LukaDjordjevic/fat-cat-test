@@ -22,36 +22,47 @@ const getAvailableFields = (x, y, levelFields, numberOfBoardSquares) => {
   return availableFields
 }
 
+// Order input array of moves by the amount of possible futher moves for that move. Speeds up tour algorithm.
+const getOrderedMoves = (availableMoves, levelFields, numberOfBoardSquares) => {
+  const countedMoves = availableMoves.map(move => ({
+    move,
+    possibleMoves: getAvailableFields(move[0], move[1], levelFields, numberOfBoardSquares).length,
+  }))
+  return countedMoves.sort((a, b) => a.possibleMoves - b.possibleMoves).map(move => move.move)
+}
+
+// Recursive bit of the "tour" algorithm. It essentially tries to find a solution by trying every possible
+// move combination via recursive calls until the solution is found.
 const makeNextMove = (x, y, levelFields, levelNumber, numberOfBoardSquares) => {
   const levelCopy = JSON.parse(JSON.stringify(levelFields))
   levelCopy.push([x, y])
-  if (levelCopy.length === levelNumber) return [[x, y]]
-  const availableMoves = getAvailableFields(x, y, levelCopy, numberOfBoardSquares)
-  if (!availableMoves.length) {
-    if (levelCopy.length === levelNumber) {
-      return [[x, y]]
-    }
-    return false
-  }
+  if (levelCopy.length === levelNumber) return [[x, y]] // Level solved, start returning.
+  // Otherwise get available moves
+  let availableMoves = getAvailableFields(x, y, levelCopy, numberOfBoardSquares)
+  // Then order them by number of available further moves for that move (speeds thing up a lot)
+  availableMoves = getOrderedMoves(availableMoves, levelCopy, numberOfBoardSquares)
+  // Finally make recursive call to every possible move
   for (let i = 0; i < availableMoves.length; i += 1) {
-    const path = makeNextMove(availableMoves[i][0], availableMoves[i][1], levelCopy, levelNumber, numberOfBoardSquares)
-    if (path) {
-      path.push([x, y])
-      return path
+    const returnArray = makeNextMove(availableMoves[i][0], availableMoves[i][1], levelCopy, levelNumber, numberOfBoardSquares)
+    if (returnArray) { // Solution exists, put current [x, y] at the begining of return array.
+      returnArray.unshift([x, y])
+      return returnArray // Return to outer iteration.
     }
   }
-  return false
+  return false // No solution found in this iteration.
 }
 
+// A naive "tour" algorithm for high levels. Returns first found solution.
 function tour(x, y, levelNumber, numberOfBoardSquares) {
   return makeNextMove(x, y, [], levelNumber, numberOfBoardSquares)
 }
 
 // Generate level.
 export const createLevel = (x, y, levelNumber, numberOfBoardSquares) => {
-  if (levelNumber > 80) {
+  if (levelNumber > 80) { // Use "tour" algorithm for high levels
     return tour(x, y, levelNumber, numberOfBoardSquares)
   }
+  // Otherwise use randomized algorithm.
   const levelFields = [[x, y]]
   let lastField = [x, y]
   let allOk = true
