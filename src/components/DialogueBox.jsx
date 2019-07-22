@@ -3,18 +3,24 @@ import PropTypes from 'prop-types'
 import { Button } from 'antd'
 
 const DalogueBox = (props) => {
+  const {
+    headline,
+    additionalText,
+    onClick,
+    buttonText,
+  } = props
   return (
     <div className="modal">
       <div className="basic-form" style={{ width: '280px', alignItems: 'center' }}>
-        <div className="form-headline">{props.headline}</div>
-        <div className="">{props.additionalText}</div>
+        <div className="form-headline">{headline}</div>
+        <div className="">{additionalText}</div>
         <div style={{ height: '10px' }} />
         <Button
           className="button"
           size="default"
-          onClick={props.onClick}
+          onClick={onClick}
         >
-          {props.buttonText}
+          {buttonText}
         </Button>
       </div>
     </div>
@@ -22,7 +28,7 @@ const DalogueBox = (props) => {
 }
 
 DalogueBox.defaultProps = {
-  additionalText: ''
+  additionalText: '',
 }
 
 DalogueBox.propTypes = {

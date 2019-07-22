@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 import { numberOfBoardSquares } from '../constants'
 
 class Board extends Component {
-  getSquareProps(x, y) {
+  getSquareColor(x, y) {
     const { boardState } = this.props
     let color = 'white'
-    switch(boardState[x][y]) {
+    switch (boardState[x][y]) {
       case 'finished':
         color = '#0F0'
         break
@@ -19,22 +19,28 @@ class Board extends Component {
         break
       default:
     }
-    return { color, type: boardState[x][y]}
+    return color
   }
 
   renderBoard() {
-    const { boardState, boardSize } = this.props
+    const {
+      boardState,
+      boardSize,
+      selectingInitialSquare,
+      handleInitialSquareSelect,
+      handleLegalMoveClick,
+    } = this.props
     const boardSquares = []
     const squareSize = boardSize ? boardSize / numberOfBoardSquares : 0
     let onClick
-    for (let x = 0; x < numberOfBoardSquares; x++) {
-      for (let y = 0; y < numberOfBoardSquares; y++) {
-        const isClickable = (boardState[x][y] === 'legalMove') || (this.props.selectingInitialSquare)
-        const { color, type } = this.getSquareProps(x, y)
-        if (this.props.selectingInitialSquare) {
-          onClick = () => this.props.handleInitialSquareSelect(x, y)
-        } else if (type === 'legalMove') {
-          onClick = () => this.props.handleLegalMoveClick(x, y)
+    for (let x = 0; x < numberOfBoardSquares; x += 1) {
+      for (let y = 0; y < numberOfBoardSquares; y += 1) {
+        const isClickable = (boardState[x][y] === 'legalMove') || (selectingInitialSquare)
+        const color = this.getSquareColor(x, y)
+        if (selectingInitialSquare) {
+          onClick = () => handleInitialSquareSelect(x, y)
+        } else if (boardState[x][y] === 'legalMove') {
+          onClick = () => handleLegalMoveClick(x, y)
         } else {
           onClick = null
         }
@@ -43,14 +49,16 @@ class Board extends Component {
             key={`${x},${y}`}
             className="board-square"
             onClick={onClick}
+            role="presentation"
             style={{
               left: `${squareSize * x}px`,
               top: `${squareSize * y}px`,
               width: `${squareSize}px`,
               height: `${squareSize}px`,
               backgroundColor: color,
-              cursor: isClickable ? 'pointer' : 'default' }}
-          />
+              cursor: isClickable ? 'pointer' : 'default',
+            }}
+          />,
         )
       }
     }
@@ -75,9 +83,10 @@ Board.propTypes = {
   boardState: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
   handleLegalMoveClick: PropTypes.func.isRequired,
   handleInitialSquareSelect: PropTypes.func.isRequired,
+  selectingInitialSquare: PropTypes.bool.isRequired,
 }
 
-const mapStateToProps = ({ app, board, game }) => ({
+const mapStateToProps = ({ board, game }) => ({
   boardState: board.state,
   selectingInitialSquare: game.selectingInitialSquare,
 })

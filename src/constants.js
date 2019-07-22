@@ -20,4 +20,4 @@ export default keykey([
 ])
 
 export const numberOfBoardSquares = 10 // Number of board row squares
-export const minLevel = 6 // Minimal playable level
+export const minLevel = 99 // Minimal playable level
