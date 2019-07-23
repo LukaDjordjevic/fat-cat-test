@@ -39,15 +39,15 @@ const makeNextMove = (x, y, levelFields, levelNumber, numberOfBoardSquares) => {
   if (newLevelFields.length === levelNumber) return [[x, y]] // Level solved, start returning.
   // Otherwise get available moves
   let availableMoves = getAvailableFields(x, y, newLevelFields, numberOfBoardSquares)
-  // Then order them by the number of available further moves for that move
+  // Then order them by the number of available further moves each move has
   // so that moves with least possible options are checked first. Speeds thing up a lot.
   availableMoves = getOrderedMoves(availableMoves, newLevelFields, numberOfBoardSquares)
   // Finally make recursive calls to every possible move
   for (let i = 0; i < availableMoves.length; i += 1) {
     const returnArray = makeNextMove(availableMoves[i][0], availableMoves[i][1], newLevelFields, levelNumber, numberOfBoardSquares)
-    if (returnArray) { // Solution exists. Put current [x, y] at the begining of the return array.
+    if (returnArray) { // Solution exists. Put [x, y] from this iteration at the begining of the return array.
       returnArray.unshift([x, y])
-      return returnArray // Return to outer iteration.
+      return returnArray // Return array to outer iteration.
     }
   }
   return false // No solution found in this iteration.
