@@ -22,7 +22,7 @@ const getAvailableFields = (x, y, levelFields, numberOfBoardSquares) => {
   return availableFields
 }
 
-// Order input array of moves by the amount of possible futher moves for that move. Speeds up tour algorithm.
+// Order input array of moves by the amount of possible futher moves for that move. Speeds up "tour" algorithm.
 const getOrderedMoves = (availableMoves, levelFields, numberOfBoardSquares) => {
   const countedMoves = availableMoves.map(move => ({
     move,
@@ -41,7 +41,7 @@ const makeNextMove = (x, y, levelFields, levelNumber, numberOfBoardSquares) => {
   let availableMoves = getAvailableFields(x, y, levelCopy, numberOfBoardSquares)
   // Then order them by number of available further moves for that move (speeds thing up a lot)
   availableMoves = getOrderedMoves(availableMoves, levelCopy, numberOfBoardSquares)
-  // Finally make recursive call to every possible move
+  // Finally make recursive calls to every possible move
   for (let i = 0; i < availableMoves.length; i += 1) {
     const returnArray = makeNextMove(availableMoves[i][0], availableMoves[i][1], levelCopy, levelNumber, numberOfBoardSquares)
     if (returnArray) { // Solution exists, put current [x, y] at the begining of return array.

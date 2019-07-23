@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "antd": "^3.20.3",
-    "eslint": "^4.19.1",
     "keykey": "^2.1.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",

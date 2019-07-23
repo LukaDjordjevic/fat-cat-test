@@ -1,5 +1,5 @@
-import constants, { numberOfBoardSquares } from '../constants'
-import { getLegalMoves } from '../util'
+import constants, { numberOfBoardSquares } from '../../constants'
+import { getLegalMoves } from '../../util'
 
 const initialState = {
   state: new Array(numberOfBoardSquares).fill(new Array(numberOfBoardSquares).fill('blank')),

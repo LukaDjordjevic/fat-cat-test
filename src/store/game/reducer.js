@@ -1,4 +1,4 @@
-import constants from '../constants'
+import constants from '../../constants'
 
 const initialState = {
   levels: [],
@@ -35,13 +35,13 @@ export default (state = initialState, action) => {
         ...state,
         currentMove: action.payload,
       }
-  
+
     case constants.SET_CURRENT_LEVEL:
       return {
         ...state,
         currentLevel: action.payload,
       }
-  
+
     case constants.SET_LEFT_TO_CLICK:
       return {
         ...state,
