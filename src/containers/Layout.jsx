@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import actions, { numberOfBoardSquares } from '../constants'
+import { numberOfBoardSquares } from '../constants'
 import Board from './Board'
 import UserForm from '../components/UserForm'
 import DialogueBox from '../components/DialogueBox'
@@ -9,6 +9,9 @@ import WelcomeDialogue from '../components/WelcomeDialogue'
 import GameStats from '../components/GameStats'
 import TopBar from '../components/TopBar'
 import { createLevel } from '../util'
+import * as appActions from '../store/app/actions'
+import * as boardActions from '../store/board/actions'
+import * as gameActions from '../store/game/actions'
 
 class Layout extends Component {
   constructor(props) {
@@ -42,49 +45,46 @@ class Layout extends Component {
 
   componentDidMount() {
     this.setBoardDimensions()
-    window.addEventListener('resize', this.onWindowResize);
+    window.addEventListener('resize', this.onWindowResize)
   }
 
   componentWillReceiveProps(nextProps) {
+    const {
+      setTime,
+      clearBoard,
+      setSelectingInitialSquare,
+      setLives,
+      currentMove,
+      currentUser,
+    } = this.props
     if (!nextProps.selectingInitialSquare && !nextProps.numberOfLegalMoves) { // Game ended
       this.stopTimer()
     }
-    if(this.props.currentMove !== nextProps.currentMove && nextProps.numberOfLegalMoves) { // New move
-      this.props.dispatch({ type: actions.SET_TIME, payload: 0 })
+    if (currentMove !== nextProps.currentMove && nextProps.numberOfLegalMoves) { // New move
+      setTime(0)
     }
-    if(this.props.currentUser.name !== nextProps.currentUser.name) { // User has chaged
-      this.props.dispatch({ type: actions.CLEAR_BOARD })
-      this.props.dispatch({ type: actions.SET_SELECTING_INITIAL_SQUARE, payload: true })
-      this.props.dispatch({ type: actions.SET_TIME, payload: 0 })
-      this.props.dispatch({ type: actions.SET_LIVES, payload: nextProps.currentUser.lives })
+    if (currentUser.name !== nextProps.currentUser.name) { // User has chaged
+      clearBoard()
+      setSelectingInitialSquare(true)
+      setTime(0)
+      setLives(nextProps.currentUser.lives)
       this.stopTimer()
       this.setState({ showUserForm: false, showWelcomeDialogue: true })
     }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.onWindowResize);
+    window.removeEventListener('resize', this.onWindowResize)
   }
 
   onWindowResize() {
     this.setBoardDimensions()
   }
 
-  showUserForm() {
-    this.setState({ showUserForm: true })
-  }
-
-  closeUserForm() {
-    this.setState({ showUserForm: false })
-  }
-
-  closeWelcomeDialogue(value) {
-    this.setState({ showWelcomeDialogue: false })
-    this.props.dispatch({ type: actions.SET_CURRENT_LEVEL, payload: parseInt(value) })
-  }
-
+  // Save user to local storage & store.
   onCreateUser(userName) {
-    const newUsers = JSON.parse(JSON.stringify(this.props.users))
+    const { users, setUser, setUsers } = this.props
+    const newUsers = JSON.parse(JSON.stringify(users))
     const newUser = {
       name: userName,
       maxCompletedLevel: 0,
@@ -94,76 +94,138 @@ class Layout extends Component {
     newUsers.push(newUser)
     localStorage.setItem('users', JSON.stringify(newUsers))
     localStorage.setItem('lastUser', userName)
-    this.props.dispatch({ type: actions.SET_USER, payload: newUser })
-    this.props.dispatch({ type: actions.SET_USERS, payload: newUsers })
+    setUser(newUser)
+    setUsers(newUsers)
   }
 
+  // User has selected player from dropdow.
   onSelectUser(userName) {
-    const user = this.props.users.find(user => user.name === userName)
-    this.props.dispatch({ type: actions.SET_USER, payload: user})
-    localStorage.setItem('lastUser', userName)
+    const { users, setUser } = this.props
+    const user = users.find(u => u.name === userName)
+    setUser(user) // write to store
+    localStorage.setItem('lastUser', userName) // and to local storage.
   }
 
+  // Calculates board size based on parent div. Called on mount & window resize.
+  setBoardDimensions() {
+    if (this.boardDiv) {
+      const boardDivRect = this.boardDiv.getBoundingClientRect()
+      this.setState({
+        boardSize: Math.min(boardDivRect.width, boardDivRect.height),
+      })
+    }
+  }
+
+  closeWelcomeDialogue(value) {
+    const { setCurrentLevel } = this.props
+    this.setState({ showWelcomeDialogue: false })
+    setCurrentLevel(parseInt(value, 10))
+  }
+
+  // User has selected initial square and the level starts.
   handleInitialSquareSelect(x, y) {
-    const level = createLevel(x, y, this.props.currentLevel, numberOfBoardSquares)
-    this.props.dispatch({ type: actions.LOAD_LEVEL, payload: level })
-    this.props.dispatch({ type: actions.SET_LEFT_TO_CLICK, payload: this.props.currentLevel })
-    this.props.dispatch({ type: actions.SET_SELECTING_INITIAL_SQUARE, payload: false })
+    const {
+      loadLevel,
+      setLeftToClick,
+      setSelectingInitialSquare,
+      currentLevel,
+    } = this.props
+    const level = createLevel(x, y, currentLevel, numberOfBoardSquares)
+    loadLevel(level)
+    setLeftToClick(currentLevel)
+    setSelectingInitialSquare(false)
     this.startTimer()
   }
 
   handleLegalMoveClick(x, y) {
-    this.props.dispatch({ type: actions.UPDATE_BOARD, payload: { x, y } })
-    this.props.dispatch({ type: actions.SET_CURRENT_MOVE, payload: this.props.currentMove + 1 })
-    this.props.dispatch({ type: actions.SET_LEFT_TO_CLICK, payload: this.props.leftToClick - 1 })
+    const {
+      updateBoard,
+      setCurrentMove,
+      setLeftToClick,
+      currentMove,
+      leftToClick,
+    } = this.props
+    updateBoard(x, y)
+    setCurrentMove(currentMove + 1)
+    setLeftToClick(leftToClick - 1)
   }
 
+  // User has clicked on 'Ok' after successfully completing a level.
   startNewLevel() {
+    const {
+      setTime,
+      setLives,
+      setCurrentLevel,
+      setLeftToClick,
+      setCurrentMove,
+      setSelectingInitialSquare,
+      clearBoard,
+      currentLevel,
+      currentUser,
+      lives,
+    } = this.props
     if (this.timer) clearInterval(this.timer)
-    this.props.dispatch({ type: actions.SET_TIME, payload: 0 })
-    this.props.dispatch({ type: actions.SET_LIVES, payload: this.props.lives + 1 })
-    this.props.dispatch({ type: actions.SET_CURRENT_LEVEL, payload: this.props.currentLevel + 1 })
-    this.props.dispatch({ type: actions.SET_LEFT_TO_CLICK, payload: this.props.currentLevel + 1 })
-    this.props.dispatch({ type: actions.SET_CURRENT_MOVE, payload: 1 })
-    this.props.dispatch({ type: actions.SET_SELECTING_INITIAL_SQUARE, payload: true })
-    this.props.dispatch({ type: actions.CLEAR_BOARD })
-    this.updateUser(this.props.currentUser.name, this.props.currentLevel, this.props.lives + 1)
+    setTime(0)
+    setLives(lives + 1)
+    setCurrentLevel(currentLevel + 1)
+    setLeftToClick(currentLevel + 1)
+    setCurrentMove(1)
+    setSelectingInitialSquare(true)
+    clearBoard()
+    this.updateUser(currentUser.name, currentLevel, lives + 1)
   }
 
+  // User has clicked on 'Ok' after losing a level.
   handleGameLost() {
-    const newLives = this.props.lives - this.props.leftToClick
-    this.props.dispatch({ type: actions.SET_TIME, payload: 0 })
-    this.props.dispatch({ type: actions.SET_CURRENT_MOVE, payload: 1 })
-    this.props.dispatch({ type: actions.SET_SELECTING_INITIAL_SQUARE, payload: true })
-    this.props.dispatch({ type: actions.CLEAR_BOARD })
+    const {
+      setTime,
+      setLives,
+      setCurrentLevel,
+      setLeftToClick,
+      setCurrentMove,
+      setSelectingInitialSquare,
+      clearBoard,
+      lives,
+      leftToClick,
+      currentLevel,
+      currentUser,
+    } = this.props
+    const newLives = lives - leftToClick
+    setTime(0)
+    setCurrentMove(1)
+    setSelectingInitialSquare(true)
+    clearBoard()
     if (newLives > 0) {
-      this.props.dispatch({ type: actions.SET_LIVES, payload: newLives })
-      this.props.dispatch({ type: actions.SET_LEFT_TO_CLICK, payload: this.props.currentLevel + 1 })
-      this.updateUser(this.props.currentUser.name, 0, newLives)
+      setLives(newLives)
+      setLeftToClick(currentLevel + 1)
+      this.updateUser(currentUser.name, 0, newLives)
     } else {
-      this.props.dispatch({ type: actions.SET_LIVES, payload: 1 })
-      this.props.dispatch({ type: actions.SET_CURRENT_LEVEL, payload: 1 })
-      this.props.dispatch({ type: actions.SET_LEFT_TO_CLICK, payload: 1 })
-      this.updateUser(this.props.currentUser.name, 0, 1)
+      setLives(1)
+      setCurrentLevel(1)
+      setLeftToClick(1)
+      this.updateUser(currentUser.name, 0, 1)
     }
   }
 
+  // Read users from storage and write them in store.
   readUsersFromStorage() {
+    const { setUser, setUsers, setLives } = this.props
     let users = localStorage.getItem('users')
     const lastUser = localStorage.getItem('lastUser')
     if (users) {
       users = JSON.parse(users)
-      const user = users.find(user => user.name === lastUser)
+      const user = users.find(u => u.name === lastUser)
       if (user) {
-        this.props.dispatch({ type: actions.SET_USER, payload: user })
-        this.props.dispatch({ type: actions.SET_LIVES, payload: user.lives })
+        setUser(user)
+        setLives(user.lives)
       }
-      this.props.dispatch({ type: actions.SET_USERS, payload: users })
+      setUsers(users)
     }
   }
 
   // Update user's maxCompletedLevel & lives in localStorage & store
   updateUser(userName, levelCompleted, lives) {
+    const { setUser, setUsers } = this.props
     let users = localStorage.getItem('users')
     if (users) {
       users = JSON.parse(users)
@@ -173,24 +235,24 @@ class Layout extends Component {
       users[userIdx] = user
       user.lives = lives
       localStorage.setItem('users', JSON.stringify(users))
-      this.props.dispatch({ type: actions.SET_USER, payload: user})
-      this.props.dispatch({ type: actions.SET_USERS, payload: users})
+      setUser(user)
+      setUsers(users)
     }
   }
 
-  setBoardDimensions() {
-    if (this.boardDiv) {
-      const boardDivRect = this.boardDiv.getBoundingClientRect()
-      this.setState({ 
-        boardSize: Math.min(boardDivRect.width, boardDivRect.height)
-      })
-    }
+  closeUserForm() {
+    this.setState({ showUserForm: false })
+  }
+
+  showUserForm() {
+    this.setState({ showUserForm: true })
   }
 
   startTimer() {
-    this.props.dispatch({ type: actions.SET_TIME, payload: 0 })
+    const { setTime, moveTime } = this.props
+    setTime(0)
     this.timer = setInterval(() => {
-      this.props.dispatch({ type: actions.SET_TIME, payload: this.props.moveTime + 1})
+      setTime(moveTime + 1)
     }, 1000)
   }
 
@@ -199,62 +261,93 @@ class Layout extends Component {
   }
 
   render() {
+    const {
+      boardSize,
+      showUserForm,
+      showWelcomeDialogue,
+    } = this.state
+    const {
+      users,
+      numberOfLegalMoves,
+      currentLevel,
+      currentUser,
+      leftToClick,
+      selectingInitialSquare,
+    } = this.props
     return (
       <div className="layout">
-        <div className="top-bar" style={{ width: `${Math.max(this.state.boardSize, 350)}px` }}>
-          <TopBar showUserForm={this.showUserForm}/>
+        <div className="top-bar" style={{ width: `${Math.max(boardSize, 350)}px` }}>
+          <TopBar showUserForm={this.showUserForm} />
         </div>
-        <div className="board-div" ref={el => this.boardDiv = el}>
-          <div className="board" style={{ width: `${this.state.boardSize}px`, height: `${this.state.boardSize}px` }}>
+        <div className="board-div" ref={(el) => { this.boardDiv = el }}>
+          <div className="board" style={{ width: `${boardSize}px`, height: `${boardSize}px` }}>
             <Board
-              boardSize={this.state.boardSize}
+              boardSize={boardSize}
               handleInitialSquareSelect={this.handleInitialSquareSelect}
               handleLegalMoveClick={this.handleLegalMoveClick}
-             />
+            />
           </div>
         </div>
-        <div className="game-stats" style={{ width: `${Math.max(this.state.boardSize, 350)}px` }}>
+        <div className="game-stats" style={{ width: `${Math.max(boardSize, 350)}px` }}>
           <GameStats />
         </div>
-        {this.state.showUserForm ?
-          <UserForm
-            closeForm={this.closeUserForm}
-            users={this.props.users}
-            onSelectUser={this.onSelectUser}
-            onCreateUser={this.onCreateUser}
-          /> : null}
-        {this.state.showWelcomeDialogue ?
-          <WelcomeDialogue
-            closeForm={this.closeWelcomeDialogue}
-            user={this.props.currentUser}
-          /> : null}
-        {!this.props.selectingInitialSquare && !this.props.numberOfLegalMoves && !this.props.leftToClick ? 
-          <DialogueBox 
-            onClick={this.startNewLevel}
-            headline={`You have completed level ${this.props.currentLevel}.`}
-            additionalText="You gain one life."
-            buttonText="Ok"
-          /> : null}
-        {!this.props.selectingInitialSquare && !this.props.numberOfLegalMoves && this.props.leftToClick ? 
-          <DialogueBox 
-            onClick={this.handleGameLost}
-            headline="You have lost the game."
-            additionalText={`You lose ${this.props.leftToClick} ${this.props.leftToClick === 1 ? 'life.' : 'lives.'}`}
-            buttonText="Ok"
-          /> : null}
+        {showUserForm
+          ? (
+            <UserForm
+              closeForm={this.closeUserForm}
+              users={users}
+              onSelectUser={this.onSelectUser}
+              onCreateUser={this.onCreateUser}
+            />
+          ) : null}
+        {showWelcomeDialogue
+          ? (
+            <WelcomeDialogue
+              closeForm={this.closeWelcomeDialogue}
+              user={currentUser}
+            />
+          ) : null}
+        {!selectingInitialSquare && !numberOfLegalMoves && !leftToClick
+          ? (
+            <DialogueBox
+              onClick={this.startNewLevel}
+              headline={`You have completed level ${currentLevel}.`}
+              additionalText="You gain one life."
+              buttonText="Ok"
+            />
+          ) : null}
+        {!selectingInitialSquare && !numberOfLegalMoves && leftToClick
+          ? (
+            <DialogueBox
+              onClick={this.handleGameLost}
+              headline="You have lost the game."
+              additionalText={`You lose ${leftToClick} ${leftToClick === 1 ? 'life.' : 'lives.'}`}
+              buttonText="Ok"
+            />
+          ) : null}
       </div>
     )
   }
 }
 
 Layout.defaultProps = {
+  users: [],
+  currentUser: {
+    name: '',
+    lives: 1,
+  },
   leftToClick: null,
+  currentLevel: 1,
+  lives: 1,
+  currentMove: 1,
 }
 
 Layout.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   users: PropTypes.arrayOf(PropTypes.object),
-  currentUser: PropTypes.object,
+  currentUser: PropTypes.shape({
+    name: PropTypes.string,
+    lives: PropTypes.number,
+  }),
   currentLevel: PropTypes.number,
   lives: PropTypes.number,
   leftToClick: PropTypes.number,
@@ -262,6 +355,17 @@ Layout.propTypes = {
   moveTime: PropTypes.number.isRequired,
   numberOfLegalMoves: PropTypes.number.isRequired,
   selectingInitialSquare: PropTypes.bool.isRequired,
+  setTime: PropTypes.func.isRequired,
+  setLives: PropTypes.func.isRequired,
+  setLeftToClick: PropTypes.func.isRequired,
+  setUser: PropTypes.func.isRequired,
+  setUsers: PropTypes.func.isRequired,
+  setCurrentLevel: PropTypes.func.isRequired,
+  setCurrentMove: PropTypes.func.isRequired,
+  clearBoard: PropTypes.func.isRequired,
+  loadLevel: PropTypes.func.isRequired,
+  setSelectingInitialSquare: PropTypes.func.isRequired,
+  updateBoard: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = ({ app, board, game }) => ({
@@ -276,4 +380,10 @@ const mapStateToProps = ({ app, board, game }) => ({
   selectingInitialSquare: game.selectingInitialSquare,
 })
 
-export default connect(mapStateToProps)(Layout)
+const mapDispatchToProps = {
+  ...appActions,
+  ...boardActions,
+  ...gameActions,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Layout)

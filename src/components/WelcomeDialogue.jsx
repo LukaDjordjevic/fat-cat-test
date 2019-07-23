@@ -2,13 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Select } from 'antd'
 import { range } from '../util'
-import { minLevel } from '../constants'
+import { minLevel, numberOfBoardSquares } from '../constants'
 
 const WelcomeDialogue = (props) => {
   const { Option } = Select
   const { user, closeForm } = props
   const maxCompletedLevel = user.maxCompletedLevel || 0
-  const maxLevel = Math.max(minLevel, maxCompletedLevel + 1)
+  const maxFields = (numberOfBoardSquares * numberOfBoardSquares) - 1
+  const maxLevel = maxCompletedLevel + 1 > maxFields ? maxFields : Math.max(minLevel, maxCompletedLevel + 1)
   const levels = range(minLevel, maxLevel + 1).map(level => <Option key={level}>{level}</Option>)
 
   return (

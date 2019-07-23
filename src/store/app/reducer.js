@@ -1,4 +1,4 @@
-import constants from '../constants'
+import types from './types'
 
 const initialState = {
   currentUser: {},
@@ -7,13 +7,13 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case constants.SET_USER:
+    case types.SET_USER:
       return {
         ...state,
         currentUser: action.payload,
       }
 
-    case constants.SET_USERS:
+    case types.SET_USERS:
       return {
         ...state,
         users: action.payload,
