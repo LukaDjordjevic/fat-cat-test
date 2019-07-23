@@ -1,0 +1,5 @@
+export default {
+  CLEAR_BOARD: 'CLEAR_BOARD',
+  LOAD_LEVEL: 'LOAD_LEVEL',
+  UPDATE_BOARD: 'UPDATE_BOARD',
+}

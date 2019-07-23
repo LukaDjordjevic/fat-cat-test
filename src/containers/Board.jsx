@@ -22,6 +22,10 @@ class Board extends Component {
     return color
   }
 
+  // Renders a board based on board state in store.
+  // Appropriate onClick handlers are attached based on field state which
+  // can be 'blank', 'unfinished', 'finished' or 'legalMove', and context
+  // (whether initial square selection is in progress or not).
   renderBoard() {
     const {
       boardState,

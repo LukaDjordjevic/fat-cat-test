@@ -1,4 +1,6 @@
-import constants, { numberOfBoardSquares } from '../../constants'
+import types from './types'
+import { numberOfBoardSquares } from '../../constants'
+
 import { getLegalMoves } from '../../util'
 
 const initialState = {
@@ -16,13 +18,13 @@ export default (state = initialState, action) => {
   let updatedBoardState
   const { payload } = action
   switch (action.type) {
-    case constants.CLEAR_BOARD:
+    case types.CLEAR_BOARD:
       return {
         ...state,
         state: JSON.parse(JSON.stringify(new Array(numberOfBoardSquares).fill(new Array(numberOfBoardSquares).fill('blank')))),
       }
 
-    case constants.LOAD_LEVEL:
+    case types.LOAD_LEVEL:
       x = payload[0][0]
       y = payload[0][1]
 
@@ -44,7 +46,7 @@ export default (state = initialState, action) => {
         numberOfLegalMoves,
       }
 
-    case constants.UPDATE_BOARD:
+    case types.UPDATE_BOARD:
       updatedBoardState = JSON.parse(JSON.stringify(state.state))
       updatedBoardState[action.payload.x][action.payload.y] = 'finished'
       legalMoves = getLegalMoves(action.payload.x, action.payload.y, numberOfBoardSquares)

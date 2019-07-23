@@ -34,17 +34,18 @@ const getOrderedMoves = (availableMoves, levelFields, numberOfBoardSquares) => {
 // Recursive bit of the "tour" algorithm. It essentially tries to find a solution by trying every possible
 // move combination via recursive calls until the solution is found.
 const makeNextMove = (x, y, levelFields, levelNumber, numberOfBoardSquares) => {
-  const levelCopy = JSON.parse(JSON.stringify(levelFields))
-  levelCopy.push([x, y])
-  if (levelCopy.length === levelNumber) return [[x, y]] // Level solved, start returning.
+  const newLevelFields = JSON.parse(JSON.stringify(levelFields))
+  newLevelFields.push([x, y])
+  if (newLevelFields.length === levelNumber) return [[x, y]] // Level solved, start returning.
   // Otherwise get available moves
-  let availableMoves = getAvailableFields(x, y, levelCopy, numberOfBoardSquares)
-  // Then order them by number of available further moves for that move (speeds thing up a lot)
-  availableMoves = getOrderedMoves(availableMoves, levelCopy, numberOfBoardSquares)
+  let availableMoves = getAvailableFields(x, y, newLevelFields, numberOfBoardSquares)
+  // Then order them by the number of available further moves for that move
+  // so that moves with least possible options are checked first. Speeds thing up a lot.
+  availableMoves = getOrderedMoves(availableMoves, newLevelFields, numberOfBoardSquares)
   // Finally make recursive calls to every possible move
   for (let i = 0; i < availableMoves.length; i += 1) {
-    const returnArray = makeNextMove(availableMoves[i][0], availableMoves[i][1], levelCopy, levelNumber, numberOfBoardSquares)
-    if (returnArray) { // Solution exists, put current [x, y] at the begining of return array.
+    const returnArray = makeNextMove(availableMoves[i][0], availableMoves[i][1], newLevelFields, levelNumber, numberOfBoardSquares)
+    if (returnArray) { // Solution exists. Put current [x, y] at the begining of the return array.
       returnArray.unshift([x, y])
       return returnArray // Return to outer iteration.
     }

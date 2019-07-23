@@ -19,13 +19,15 @@ const TopBar = (props) => {
 }
 
 TopBar.defaultProps = {
-  user: '',
+  user: {
+    name: '',
+  },
 }
 
 TopBar.propTypes = {
   showUserForm: PropTypes.func.isRequired,
   user: PropTypes.shape({
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
   }),
 }
 
